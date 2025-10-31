@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Models;
+
+use DrPshtiwan\LivewireMediaSelector\Models\Media as BaseMedia;
+
+class Media extends BaseMedia
+{
+    // You can customize relations, casts, scopes here
+}
+
+

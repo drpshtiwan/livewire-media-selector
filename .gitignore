@@ -1,0 +1,49 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors/IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*.orig
+
+# PHP / Laravel
+/vendor/
+composer.lock
+composer.phar
+.phpunit.result.cache
+.phpunit.cache
+/.phpunit.cache/
+/phpunit.xml
+*.log
+.php-cs-fixer.cache
+.pint.cache
+
+# Framework dirs (if present in consumer app)
+/storage/
+/bootstrap/cache/
+/public/storage
+.env
+.env.*
+
+# Node / Frontend (if present)
+/node_modules/
+npm-debug.log*
+yarn-error.log*
+yarn.lock
+pnpm-lock.yaml
+package-lock.json
+/.pnpm-store
+/.yarn/
+.yarnrc.yml
+.turbo
+dist/.DS_Store
+build/
+
+# Coverage / reports
+coverage/
+clover.xml
+
+

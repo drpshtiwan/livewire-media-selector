@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v composer >/dev/null 2>&1; then
+  echo "Running Laravel Pint before push..."
+  # Format code; if changes were made, abort push and ask to commit them
+  composer pint -q || true
+  if ! git diff --quiet; then
+    echo "Laravel Pint updated files. Please commit the changes and push again." >&2
+    exit 1
+  fi
+fi
+
+exit 0
+
+

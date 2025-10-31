@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Scope all Tailwind styles within the component root to avoid bleeding */
+[data-lms] {
+  --bg: #ffffff;
+  --muted: #6b7280;
+  --fg: #111827;
+  --border: #e5e7eb;
+  --ring: #4338ca;
+  --primary-bg: #111827;
+  --primary-fg: #ffffff;
+}
+
+/* Scale up when UI flavor is bootstrap */
+#lms-modal-bootstrap{
+  transform: scale(1.2);
+}
+
+/* Tailwind-like preflight reset scoped to [data-lms] to play nice with Bootstrap */
+@layer base {
+  [data-lms],
+  [data-lms] *,
+  [data-lms] ::before,
+  [data-lms] ::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: #e5e7eb; /* gray-200 */
+  }
+  [data-lms] ::before,
+  [data-lms] ::after { --tw-content: ''; }
+
+  [data-lms] a { color: inherit; text-decoration: inherit; }
+  [data-lms] h1,
+  [data-lms] h2,
+  [data-lms] h3,
+  [data-lms] h4,
+  [data-lms] h5,
+  [data-lms] h6 { font-size: inherit; font-weight: inherit; }
+
+  [data-lms] button,
+  [data-lms] input,
+  [data-lms] optgroup,
+  [data-lms] select,
+  [data-lms] textarea {
+    font-family: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+  }
+  [data-lms] button,
+  [data-lms] select { text-transform: none; }
+  [data-lms] [type='button'],
+  [data-lms] [type='reset'],
+  [data-lms] [type='submit'],
+  [data-lms] button {
+    -webkit-appearance: button;
+    background-color: transparent;
+    background-image: none;
+  }
+
+  [data-lms] table { text-indent: 0; border-color: inherit; border-collapse: collapse; }
+}
+
+@layer components {
+  /* Ensure SVGs render consistently inside Bootstrap pages */
+  [data-lms] svg { display: inline-block; vertical-align: middle; }
+  [data-lms] .lms-primary { @apply lms-bg-black lms-text-white lms-border-black; }
+  [data-lms] .lms-primary:hover { @apply lms-brightness-95; }
+  [data-lms] .lms-disabled { @apply lms-bg-gray-200 lms-text-gray-500 lms-border-gray-200; }
+
+  /* Buttons baseline */
+  [data-lms] button {
+    @apply lms-inline-flex lms-items-center lms-justify-center lms-border lms-border-gray-200 lms-rounded-md lms-text-sm;
+    box-shadow: none !important;
+    background-image: none !important;
+    text-shadow: none !important;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  [data-lms] button:hover { @apply lms-bg-gray-50; }
+  [data-lms] button:focus,
+  [data-lms] button:active { box-shadow: none !important; outline: 0; }
+  [data-lms] button:disabled { @apply lms-opacity-50 lms-cursor-not-allowed; }
+
+  /* Inputs */
+  [data-lms] input[type="text"],
+  [data-lms] select { @apply lms-border lms-border-gray-200 lms-rounded-md lms-text-sm; }
+
+  /* Modal overlay helper */
+  [data-lms] .lms-overlay { @ap100 lms-bg-black/40; }
+
+  /* Modal sizing to match Tailwind large modal feel */
+  [data-lms] .lms-modal {
+    width: 100%;
+    max-width: 100rem; 
+    max-height: 85vh;
+  }
+}
+
+/* Typography defaults to match Tailwind inside [data-lms] */
+[data-lms] {
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* Defensive resets against Bootstrap within modal scope */
+[data-lms] .btn,
+[data-lms] .btn:focus,
+[data-lms] .btn:active { box-shadow: none !important; background-image: none !important; }
+
+/* Removed unprefixed spacing/color overrides: prefixed utilities + [data-lms] scoping prevent conflicts */
+
+
+/* RTL helpers: flip logical positions when dir='rtl' on the component root */
+[data-lms][dir='rtl'] .lms-ml-auto { margin-left: 0; margin-right: auto; }
+[data-lms][dir='rtl'] .lms-left-2 { left: auto; right: 0.5rem; }
+[data-lms][dir='rtl'] .lms-right-2 { right: auto; left: 0.5rem; }
+[data-lms][dir='rtl'] .lms-left-1\.5 { left: auto; right: 0.375rem; }
+[data-lms][dir='rtl'] .lms-right-1\.5 { right: auto; left: 0.375rem; }

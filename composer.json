@@ -1,0 +1,57 @@
+{
+  "name": "drpshtiwan/livewire-media-selector",
+  "description": "A Livewire-powered media selector for Laravel, similar to WordPress media library.",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "livewire",
+    "media",
+    "selector",
+    "uploader",
+    "library"
+  ],
+  "require": {
+    "php": ">=8.1",
+    "illuminate/support": "^10.0|^11.0|^12.0",
+    "illuminate/database": "^10.0|^11.0|^12.0",
+    "livewire/livewire": "^3.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "DrPshtiwan\\LivewireMediaSelector\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DrPshtiwan\\LivewireMediaSelector\\Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "orchestra/testbench": "^8.0|^9.0|^10.0",
+    "pestphp/pest": "^2.34",
+    "pestphp/pest-plugin-laravel": "^2.4",
+    "laravel/pint": "^1.20.0|^1.25.0"
+  },
+  "scripts": {
+    "test": "vendor/bin/pest",
+    "pest": "vendor/bin/pest",
+    "pint": "vendor/bin/pint",
+    "lint": "vendor/bin/pint"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "DrPshtiwan\\LivewireMediaSelector\\MediaSelectorServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "homepage": "https://github.com/drpshtiwan/livewire-media-selector",
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  }
+}

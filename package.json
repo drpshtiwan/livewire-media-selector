@@ -1,0 +1,17 @@
+{
+  "name": "laravel-media-selector-build",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --clearScreen=false",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
+    "vite": "^5.4.8"
+  }
+}
+
+

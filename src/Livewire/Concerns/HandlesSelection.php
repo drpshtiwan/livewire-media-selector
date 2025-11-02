@@ -23,9 +23,27 @@ trait HandlesSelection
         if (in_array($id, $ids, true)) {
             // remove and reindex
             $this->selectedIds = array_values(array_diff($ids, [$id]));
+            $this->resetErrorBag('selection');
 
             return;
         }
+
+        $mediaClass = $this->mediaClass;
+        $media = $mediaClass::find($id);
+        if (! $media) {
+            $this->addError('selection', 'The selected media item could not be found.');
+
+            return;
+        }
+
+        $constraintError = $this->validateMediaSelectionConstraints($media);
+        if ($constraintError !== null) {
+            $this->addError('selection', $constraintError);
+
+            return;
+        }
+
+        $this->resetErrorBag('selection');
 
         if ($this->multiple) {
             // add and reindex
@@ -36,18 +54,20 @@ trait HandlesSelection
 
         // single select
         $this->selectedIds = [$id];
-
+        $this->resetErrorBag('selection');
     }
 
     public function clearSelection(): void
     {
         $this->selectedIds = [];
+        $this->resetErrorBag('selection');
     }
 
     public function clearPreview(): void
     {
         $this->value = $this->multiple ? [] : null;
         $this->selectedIds = [];
+        $this->resetErrorBag('selection');
     }
 
     public function removeFromValue($identifier): void
@@ -131,7 +151,20 @@ trait HandlesSelection
         $mediaClass = $this->mediaClass;
         $this->selectedIds = array_values(array_unique(array_map(fn ($v) => (int) $v, $this->selectedIds)));
 
-        $items = $mediaClass::query()->whereIn('id', $this->selectedIds)->get()
+        $records = $mediaClass::query()->whereIn('id', $this->selectedIds)->get();
+
+        foreach ($records as $record) {
+            $constraintError = $this->validateMediaSelectionConstraints($record);
+            if ($constraintError !== null) {
+                $this->addError('selection', $constraintError);
+
+                return;
+            }
+        }
+
+        $this->resetErrorBag('selection');
+
+        $items = $records
             ->map(fn ($m) => [
                 'id' => $m->id,
                 'disk' => $m->disk,
@@ -164,5 +197,54 @@ trait HandlesSelection
         $this->dispatch('media-added', items: $items);
         $this->selectedIds = [];
         $this->closeModal();
+    }
+
+    protected function validateMediaSelectionConstraints($media): ?string
+    {
+        if (! ($this->requireWidth || $this->requireHeight || $this->requireAspectRatio)) {
+            return null;
+        }
+
+        $width = isset($media->width) ? (int) $media->width : null;
+        $height = isset($media->height) ? (int) $media->height : null;
+
+        if ($this->requireWidth !== null) {
+            if ($width === null) {
+                return 'Selected image is missing width metadata and cannot be validated.';
+            }
+
+            if ($width !== (int) $this->requireWidth) {
+                return 'Image width must be exactly '.(int) $this->requireWidth.'px.';
+            }
+        }
+
+        if ($this->requireHeight !== null) {
+            if ($height === null) {
+                return 'Selected image is missing height metadata and cannot be validated.';
+            }
+
+            if ($height !== (int) $this->requireHeight) {
+                return 'Image height must be exactly '.(int) $this->requireHeight.'px.';
+            }
+        }
+
+        if ($this->requireAspectRatio && str_contains($this->requireAspectRatio, ':')) {
+            if ($width === null || $height === null || $height === 0) {
+                return 'Selected image is missing dimension metadata required to validate aspect ratio.';
+            }
+
+            [$ax, $ay] = array_pad(array_map('trim', explode(':', $this->requireAspectRatio, 2)), 2, null);
+            $ax = (float) $ax;
+            $ay = (float) $ay;
+            if ($ax > 0.0 && $ay > 0.0) {
+                $target = $ax / $ay;
+                $actual = $width / $height;
+                if (abs($actual - $target) > 0.01) {
+                    return 'Image aspect ratio must be approximately '.$this->requireAspectRatio.'.';
+                }
+            }
+        }
+
+        return null;
     }
 }

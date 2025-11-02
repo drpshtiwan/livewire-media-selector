@@ -163,7 +163,7 @@
                                                     </div>
                                                 @endif
                                                 <div class="lms-absolute lms-inset-0 lms-bg-black/0 group-hover:lms-bg-black/10 lms-transition"></div>
-                                                <div class="lms-absolute lms-bottom-0 lms-left-0 lms-right-0 lms-bg-black/60 lms-text-white lms-text-[11px] lms-px-1.5 lms-py-1 lms-truncate">{{$item->id}} - {{ ($item->metadata['original'] ?? null) ?: $item->filename }}</div>
+                                                <div class="lms-absolute lms-bottom-0 lms-left-0 lms-right-0 lms-bg-black/60 lms-text-white lms-text-[11px] lms-px-1.5 lms-py-1 lms-truncate">{{ ($item->metadata['original'] ?? null) ?: $item->filename }}</div>
                                                 @if(in_array($item->id, $selectedIds))
                                                     <div class="lms-absolute lms-inset-0 lms-rounded-lg lms-ring-4 lms-ring-indigo-600 lms-ring-offset-2 lms-ring-offset-white lms-pointer-events-none"></div>
                                                     <div class="lms-absolute lms-top-2 lms-left-2 lms-inline-flex lms-items-center lms-justify-center lms-w-6 lms-h-6 lms-rounded-full lms-bg-indigo-600 lms-text-white lms-text-sm">✓</div>
@@ -366,6 +366,10 @@
                             @endif
                         </div>
                     @endif
+
+                    @error('selection')
+                        <div class="lms-px-6 lms-py-2 lms-text-sm lms-text-red-600">{{ $message }}</div>
+                    @enderror
 
                     <div class="lms-px-6 lms-py-4 lms-border-t lms-flex lms-items-center lms-gap-4 lms-bg-gray-50">
                         <div class="lms-text-sm lms-text-gray-700">{{ __('media-selector::messages.files_selected', ['count' => count($selectedIds)]) }}</div>

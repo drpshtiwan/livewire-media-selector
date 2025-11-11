@@ -2,6 +2,7 @@
 
 use DrPshtiwan\LivewireMediaSelector\Livewire\MediaSelector;
 use DrPshtiwan\LivewireMediaSelector\Models\Media;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
@@ -44,4 +45,28 @@ it('renders and can open modal and list media', function () {
     // Ensure media listing is populated
     $items = $comp->get('media');
     expect($items->total())->toBe(2);
+});
+
+it('stores actual mime type when client reports octet stream', function () {
+    Storage::fake('public');
+
+    $spoofed = UploadedFile::fake()
+        ->image('photo.jpg', 10, 10)
+        ->size(120)
+        ->mimeType('application/octet-stream');
+
+    $actualMime = mime_content_type($spoofed->getPathname());
+
+    Livewire::test(MediaSelector::class, [
+        'canUpload' => true,
+    ])
+        ->set('uploads', [$spoofed])
+        ->call('saveUpload')
+        ->assertHasNoErrors();
+
+    $media = Media::first();
+
+    expect($media)->not->toBeNull();
+    expect($media->mime)->toBe($actualMime);
+    expect(Storage::disk('public')->exists($media->path))->toBeTrue();
 });

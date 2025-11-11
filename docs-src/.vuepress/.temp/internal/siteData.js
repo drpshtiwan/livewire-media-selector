@@ -1,0 +1,1 @@
+export const siteData = JSON.parse("{\"base\":\"/\",\"lang\":\"en-US\",\"title\":\"Livewire Media Selector\",\"description\":\"Documentation for the Livewire-based media selector with performance-oriented best practices.\",\"head\":[],\"locales\":{}}")

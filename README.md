@@ -98,6 +98,22 @@ Publish the assets (CSS):
 php artisan vendor:publish --tag=media-selector-assets --force
 ```
 
+Quick usage example:
+
+```php
+use App\Models\Post;
+
+$post = Post::first();
+$images = $post->getMedia('gallery');
+$firstUrl = $post->getMediaUrl('gallery');
+```
+
+```blade
+<livewire:media-selector wire:model="media" collection="gallery" />
+```
+
+[Read the full Docs](http://livewire-media.thejano.com/) for configuration options, Livewire integration patterns, and performance tips.
+
 ### Include the stylesheet
 
 Include styles in your app layout head, after Livewire styles:

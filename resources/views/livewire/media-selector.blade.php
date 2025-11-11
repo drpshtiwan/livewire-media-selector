@@ -11,7 +11,7 @@
 
 
     @if(is_array($value) && count($value))
-        <div class="lms-mt-3 lms-grid lms-grid-cols-2 sm:lms-grid-cols-3 md:lms-grid-cols-5 lg:lms-grid-cols-6 xl:lms-grid-cols-8 lms-gap-2">
+        <div class="lms-mt-3 lms-grid lms-grid-cols-2 md:lms-grid-cols-3 lg:lms-grid-cols-4 lms-gap-2">
             @foreach($value as $val)
                 @php($__path = is_array($val) ? ($val['path'] ?? '') : $val)
                 @php($__id = is_array($val) ? ($val['id'] ?? null) : null)

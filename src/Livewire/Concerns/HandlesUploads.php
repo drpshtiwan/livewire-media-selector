@@ -30,14 +30,6 @@ trait HandlesUploads
             return;
         }
         $rulesForEach = ['file'];
-        if ($this->hasProvidedMimes && count($this->allowedMimes)) {
-            $rulesForEach[] = 'mimetypes:'.implode(',', $this->allowedMimes);
-        } elseif (count($this->allowedExtensions)) {
-            $extensions = array_filter($this->allowedExtensions, fn ($ext) => $ext !== 'svg');
-            if (count($extensions)) {
-                $rulesForEach[] = 'mimes:'.implode(',', $extensions);
-            }
-        }
         $rulesForEach[] = 'max:'.$this->maxUploadKb;
 
         $this->validate([
@@ -45,9 +37,44 @@ trait HandlesUploads
             'uploads.*' => implode('|', $rulesForEach),
         ]);
 
+        $mimeCache = [];
+        foreach ((array) $this->uploads as $file) {
+            $mimeGuess = (string) ($this->guessUploadMime($file) ?? '');
+            $mimeCache[spl_object_id($file)] = $mimeGuess;
+
+            if (count($this->allowedMimes)) {
+                if ($mimeGuess === '' || ! $this->mimeMatchesAllowed($mimeGuess)) {
+                    $this->addError('uploads', 'The uploaded file type is not allowed.');
+
+                    return;
+                }
+            } elseif (count($this->allowedExtensions)) {
+                $extension = null;
+                if (method_exists($file, 'getClientOriginalExtension')) {
+                    $extension = $file->getClientOriginalExtension();
+                }
+                if (! $extension && method_exists($file, 'getClientOriginalName')) {
+                    $original = $file->getClientOriginalName();
+                    $extension = $original ? pathinfo($original, PATHINFO_EXTENSION) : null;
+                }
+                $extension = is_string($extension) ? strtolower($extension) : null;
+
+                $allowedExtensions = array_values(array_filter(array_map(
+                    fn ($ext) => is_string($ext) ? strtolower($ext) : null,
+                    array_diff($this->allowedExtensions, ['svg'])
+                )));
+
+                if ($extension === null || ($allowedExtensions && ! in_array($extension, $allowedExtensions, true))) {
+                    $this->addError('uploads', 'The uploaded file extension is not allowed.');
+
+                    return;
+                }
+            }
+        }
+
         if (($this->requireWidth || $this->requireHeight || $this->requireAspectRatio)) {
             foreach ((array) $this->uploads as $file) {
-                $mimeGuess = method_exists($file, 'getClientMimeType') ? (string) $file->getClientMimeType() : '';
+                $mimeGuess = (string) ($mimeCache[spl_object_id($file)] ?? $this->guessUploadMime($file) ?? '');
                 if (! $mimeGuess || ! str_starts_with($mimeGuess, 'image/')) {
                     $this->addError('uploads', 'Only image files are allowed when size/aspect constraints are set.');
 
@@ -109,7 +136,7 @@ trait HandlesUploads
             $storedPath = $file->store($this->directory, $this->disk);
 
             $filename = basename($storedPath);
-            $mime = method_exists($file, 'getClientMimeType') ? $file->getClientMimeType() : null;
+            $mime = $this->guessUploadMime($file, $disk, $storedPath);
             $size = $disk->size($storedPath);
 
             $width = null;
@@ -171,5 +198,75 @@ trait HandlesUploads
 
         $this->activeTab = 'browse';
         $this->showModal = true;
+    }
+
+    protected function guessUploadMime($file, $disk = null, ?string $storedPath = null): ?string
+    {
+        $candidates = [];
+
+        if (method_exists($file, 'getMimeType')) {
+            $candidates[] = $file->getMimeType();
+        }
+        if (method_exists($file, 'getClientMimeType')) {
+            $candidates[] = $file->getClientMimeType();
+        }
+
+        $realPath = method_exists($file, 'getRealPath') ? $file->getRealPath() : null;
+        if ($realPath && is_file($realPath) && function_exists('mime_content_type')) {
+            $candidates[] = @mime_content_type($realPath);
+        }
+
+        if ($storedPath && $disk && method_exists($disk, 'mimeType')) {
+            try {
+                $candidates[] = $disk->mimeType($storedPath);
+            } catch (\Throwable $e) {
+            }
+        }
+
+        foreach ($candidates as $candidate) {
+            if (is_string($candidate) && $candidate !== '' && strtolower((string) $candidate) !== 'application/octet-stream') {
+                return $candidate;
+            }
+        }
+
+        foreach ($candidates as $candidate) {
+            if (is_string($candidate) && $candidate !== '') {
+                return $candidate;
+            }
+        }
+
+        return null;
+    }
+
+    protected function mimeMatchesAllowed(string $mime): bool
+    {
+        if (! count($this->allowedMimes)) {
+            return true;
+        }
+
+        $mime = strtolower($mime);
+
+        foreach ($this->allowedMimes as $pattern) {
+            if (! is_string($pattern) || $pattern === '') {
+                continue;
+            }
+
+            $pattern = strtolower($pattern);
+
+            if ($pattern === '*') {
+                return true;
+            }
+
+            if (str_ends_with($pattern, '/*')) {
+                $prefix = substr($pattern, 0, -1);
+                if (str_starts_with($mime, $prefix)) {
+                    return true;
+                }
+            } elseif (strcasecmp($mime, $pattern) === 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

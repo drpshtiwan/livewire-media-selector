@@ -5,6 +5,7 @@ namespace DrPshtiwan\LivewireMediaSelector\Concerns;
 use DrPshtiwan\LivewireMediaSelector\Models\Media;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 trait HasMediaSelector
 {
@@ -19,9 +20,89 @@ trait HasMediaSelector
 
     public function getMedia(?string $collection = null)
     {
+        if ($this->relationLoaded('media')) {
+            $items = $this->getRelation('media');
+
+            return $collection === null
+                ? $items
+                : $items->filter(function ($media) use ($collection) {
+                    return optional($media->pivot)->collection === $collection;
+                })->values();
+        }
+
         $rel = $this->media();
 
         return $collection ? $rel->wherePivot('collection', $collection)->get() : $rel->get();
+    }
+
+    /**
+     * Scope a query to eager load the media relationship, optionally filtered by collection.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     */
+    public function scopeWithMediaCollection($query, ?string $collection = null, ?callable $callback = null)
+    {
+        return $query->with([
+            'media' => function ($relation) use ($collection, $callback) {
+                if ($collection !== null) {
+                    $relation->wherePivot('collection', $collection);
+                }
+
+                if (is_callable($callback)) {
+                    $callback($relation);
+                }
+            },
+        ]);
+    }
+
+    public function getMediaUrls(?string $collection = null): array
+    {
+        return $this->getMedia($collection)
+            ->map(function ($media) {
+                $disk = method_exists($media, 'getAttribute')
+                    ? $media->getAttribute('disk')
+                    : ($media->disk ?? null);
+                $path = method_exists($media, 'getAttribute')
+                    ? $media->getAttribute('path')
+                    : ($media->path ?? null);
+
+                if (! is_string($path) || $path === '') {
+                    return null;
+                }
+
+                $diskName = is_string($disk) && $disk !== ''
+                    ? $disk
+                    : (string) config('media-selector.disk', config('filesystems.default', 'public'));
+
+                try {
+                    /** @var \Illuminate\Filesystem\FilesystemAdapter $adapter */
+                    $adapter = Storage::disk($diskName);
+
+                    return (string) $adapter->url($path);
+                } catch (\Throwable $e) {
+                    try {
+                        $defaultDisk = (string) config('filesystems.default', 'public');
+                        /** @var \Illuminate\Filesystem\FilesystemAdapter $adapter */
+                        $adapter = Storage::disk($defaultDisk);
+
+                        return (string) $adapter->url($path);
+                    } catch (\Throwable $inner) {
+                        return method_exists($media, 'getAttribute')
+                            ? (string) $media->getAttribute('url')
+                            : (string) ($media->url ?? '');
+                    }
+                }
+            })
+            ->filter(fn ($url) => is_string($url) && $url !== '')
+            ->values()
+            ->all();
+    }
+
+    public function getMediaUrl(?string $collection = null): ?string
+    {
+        $urls = $this->getMediaUrls($collection);
+
+        return count($urls) ? $urls[0] : null;
     }
 
     public function getMediaPayload(?string $collection = null): array

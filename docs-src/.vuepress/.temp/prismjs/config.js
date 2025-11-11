@@ -1,0 +1,5 @@
+import "/Users/pshiwanmahmood/code/packages/lararvel-media-selector/node_modules/@vuepress/highlighter-helper/lib/client/styles/base.css"
+import "/Users/pshiwanmahmood/code/packages/lararvel-media-selector/node_modules/@vuepress/plugin-prismjs/lib/client/styles/nord.css"
+import "/Users/pshiwanmahmood/code/packages/lararvel-media-selector/node_modules/@vuepress/highlighter-helper/lib/client/styles/line-numbers.css"
+import "/Users/pshiwanmahmood/code/packages/lararvel-media-selector/node_modules/@vuepress/highlighter-helper/lib/client/styles/notation-highlight.css"
+import "/Users/pshiwanmahmood/code/packages/lararvel-media-selector/node_modules/@vuepress/highlighter-helper/lib/client/styles/code-block-title.css"

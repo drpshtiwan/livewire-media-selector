@@ -1,3 +1,3 @@
 import comp from "/Users/pshiwanmahmood/code/packages/lararvel-media-selector/docs-src/.vuepress/.temp/pages/index.html.vue"
-const data = JSON.parse("{\"path\":\"/\",\"title\":\"Livewire Media Selector\",\"lang\":\"en-US\",\"frontmatter\":{},\"git\":{},\"filePathRelative\":\"README.md\"}")
+const data = JSON.parse("{\"path\":\"/\",\"title\":\"Livewire Media Selector\",\"lang\":\"en-US\",\"frontmatter\":{},\"git\":{\"updatedTime\":1762903387000,\"contributors\":[{\"name\":\"Pshtiwan Mahmood\",\"username\":\"\",\"email\":\"kardoey@gmail.com\",\"commits\":1}],\"changelog\":[{\"hash\":\"a5b469cf0b51415b9c84091c8c3a038d8bb5fa26\",\"time\":1762903387000,\"email\":\"kardoey@gmail.com\",\"author\":\"Pshtiwan Mahmood\",\"message\":\"WIP\"}]},\"filePathRelative\":\"README.md\"}")
 export { comp, data }

@@ -130,6 +130,81 @@ public function save(): void
 
 Each example can be combined—attributes layer on top of configuration defaults so you can tailor the selector per use-case.
 
+### Product model example (thumbnail + gallery)
+
+Assuming your `Product` model uses the `HasMediaSelector` trait:
+
+```php
+class Product extends Model
+{
+    use HasMediaSelector;
+}
+```
+
+In your Livewire component:
+
+```php
+class EditProduct extends Component
+{
+    public Product $product;
+    public array|null $thumbnail = null;
+    public array $gallery = [];
+
+    public function mount(Product $product): void
+    {
+        $this->product = Product::query()
+            ->withMediaCollection('gallery')
+            ->findOrFail($product->getKey());
+
+        $this->thumbnail = $product->getMediaPayload('thumbnail');
+        $this->gallery = $product->getMediaPayload('gallery');
+    }
+
+    public function save(): void
+    {
+        $this->product->syncMedia($this->thumbnail, 'thumbnail');
+        $this->product->syncMedia($this->gallery, 'gallery');
+
+        $this->dispatch('product-saved');
+    }
+}
+```
+
+Blade view:
+
+```blade
+<div class="space-y-6">
+    <div>
+        <h3 class="font-semibold mb-2">Thumbnail</h3>
+        <livewire:media-selector
+            wire:model="thumbnail"
+            collection="thumbnail"
+            :multiple="false"
+            :require-width="800"
+            :require-height="600"
+        />
+    </div>
+
+    <div>
+        <h3 class="font-semibold mb-2">Gallery</h3>
+        <livewire:media-selector
+            wire:model="gallery"
+            collection="gallery"
+            :multiple="true"
+            :can-upload="true"
+            :can-delete="true"
+        />
+    </div>
+</div>
+```
+
+Whenever you need to render images on the storefront:
+
+```php
+$thumbUrl = $product->getMediaUrl('thumbnail');
+$galleryUrls = $product->getMediaUrls('gallery');
+```
+
 ### Upload bindings
 
 - `uploads` / `:uploads` — Bind an array of `UploadedFile` instances if you handle uploads manually. Typically managed by the component when users pick files via the modal.

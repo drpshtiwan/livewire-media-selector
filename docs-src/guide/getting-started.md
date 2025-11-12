@@ -16,10 +16,21 @@ php artisan vendor:publish --tag=media-selector-migrations
 php artisan migrate
 ```
 
-Publish the UI assets (Tailwind build) when you want to customize or version them yourself:
+Publish the UI assets (Tailwind build) so the stylesheet directive can serve them:
 
 ```bash
 php artisan vendor:publish --tag=media-selector-assets --force
+```
+
+Add the directive to a shared layout (after `@livewireStyles`):
+
+```blade
+<!-- resources/views/layouts/app.blade.php -->
+<head>
+    <!-- ... -->
+    @livewireStyles
+    @mediaSelectorStyles
+</head>
 ```
 
 ## Registering the trait
@@ -48,6 +59,17 @@ The trait exposes helper methods such as `attachMedia`, `syncMedia`, `getMedia`,
     :can-delete="false"
 />
 ```
+
+### Stylesheet directive
+
+Include the packaged styles in your layout (after `@livewireStyles`):
+
+```blade
+@livewireStyles
+@mediaSelectorStyles
+```
+
+If you publish the CSS to customize it, keep the directive in place (it will point to your published file).
 
 ### Opening the modal programmatically
 

@@ -8,10 +8,18 @@
 <span class="line">php artisan vendor:publish <span class="token parameter variable">--tag</span><span class="token operator">=</span>media-selector-migrations</span>
 <span class="line">php artisan migrate</span>
 <span class="line"></span></code></pre>
-<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>Publish the UI assets (Tailwind build) when you want to customize or version them yourself:</p>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>Publish the UI assets (Tailwind build) so the stylesheet directive can serve them:</p>
 <div class="language-bash line-numbers-mode" data-highlighter="prismjs" data-ext="sh"><pre v-pre><code class="language-bash"><span class="line">php artisan vendor:publish <span class="token parameter variable">--tag</span><span class="token operator">=</span>media-selector-assets <span class="token parameter variable">--force</span></span>
 <span class="line"></span></code></pre>
-<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div></div></div><h2 id="registering-the-trait" tabindex="-1"><a class="header-anchor" href="#registering-the-trait"><span>Registering the trait</span></a></h2>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div></div></div><p>Add the directive to a shared layout (after <code v-pre>@livewireStyles</code>):</p>
+<div class="language-blade line-numbers-mode" data-highlighter="prismjs" data-ext="blade"><pre v-pre><code class="language-blade"><span class="line">&lt;!-- resources/views/layouts/app.blade.php --&gt;</span>
+<span class="line">&lt;head&gt;</span>
+<span class="line">    &lt;!-- ... --&gt;</span>
+<span class="line">    @livewireStyles</span>
+<span class="line">    @mediaSelectorStyles</span>
+<span class="line">&lt;/head&gt;</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="registering-the-trait" tabindex="-1"><a class="header-anchor" href="#registering-the-trait"><span>Registering the trait</span></a></h2>
 <p>Attach media to any Eloquent model via the provided trait:</p>
 <div class="language-php line-numbers-mode" data-highlighter="prismjs" data-ext="php"><pre v-pre><code class="language-php"><span class="line"><span class="token keyword">use</span> <span class="token package">DrPshtiwan<span class="token punctuation">\</span>LivewireMediaSelector<span class="token punctuation">\</span>Concerns<span class="token punctuation">\</span>HasMediaSelector</span><span class="token punctuation">;</span></span>
 <span class="line"></span>
@@ -30,7 +38,13 @@
 <span class="line">    :can-delete=&quot;false&quot;</span>
 <span class="line">/&gt;</span>
 <span class="line"></span></code></pre>
-<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="opening-the-modal-programmatically" tabindex="-1"><a class="header-anchor" href="#opening-the-modal-programmatically"><span>Opening the modal programmatically</span></a></h3>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="stylesheet-directive" tabindex="-1"><a class="header-anchor" href="#stylesheet-directive"><span>Stylesheet directive</span></a></h3>
+<p>Include the packaged styles in your layout (after <code v-pre>@livewireStyles</code>):</p>
+<div class="language-blade line-numbers-mode" data-highlighter="prismjs" data-ext="blade"><pre v-pre><code class="language-blade"><span class="line">@livewireStyles</span>
+<span class="line">@mediaSelectorStyles</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div></div></div><p>If you publish the CSS to customize it, keep the directive in place (it will point to your published file).</p>
+<h3 id="opening-the-modal-programmatically" tabindex="-1"><a class="header-anchor" href="#opening-the-modal-programmatically"><span>Opening the modal programmatically</span></a></h3>
 <div class="language-php line-numbers-mode" data-highlighter="prismjs" data-ext="php"><pre v-pre><code class="language-php"><span class="line"><span class="token class-name static-context">Livewire</span><span class="token operator">::</span><span class="token function">test</span><span class="token punctuation">(</span><span class="token class-name class-name-fully-qualified static-context"><span class="token punctuation">\</span>DrPshtiwan<span class="token punctuation">\</span>LivewireMediaSelector<span class="token punctuation">\</span>Livewire<span class="token punctuation">\</span>MediaSelector</span><span class="token operator">::</span><span class="token keyword">class</span><span class="token punctuation">)</span></span>
 <span class="line">    <span class="token operator">-></span><span class="token function">call</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'openModal'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 <span class="line"></span></code></pre>

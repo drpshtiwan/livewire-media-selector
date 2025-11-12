@@ -32,6 +32,9 @@ This site explains how to install, configure, and get the best performance from 
 </ul>
 <h2 id="docs-url" tabindex="-1"><a class="header-anchor" href="#docs-url"><span>Docs URL</span></a></h2>
 <p>Visit <a href="http://livewire-media.thejano.com/" target="_blank" rel="noopener noreferrer">livewire-media.thejano.com</a> for the hosted documentation with global search across every guide.</p>
-</div></template>
+<div class="language-blade line-numbers-mode" data-highlighter="prismjs" data-ext="blade"><pre v-pre><code class="language-blade"><span class="line">@livewireStyles</span>
+<span class="line">@mediaSelectorStyles</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div></div></div></div></template>
 
 

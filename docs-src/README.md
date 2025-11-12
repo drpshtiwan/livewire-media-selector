@@ -38,3 +38,8 @@ This site explains how to install, configure, and get the best performance from 
 ## Docs URL
 
 Visit [livewire-media.thejano.com](http://livewire-media.thejano.com/) for the hosted documentation with global search across every guide.
+
+```blade
+@livewireStyles
+@mediaSelectorStyles
+```

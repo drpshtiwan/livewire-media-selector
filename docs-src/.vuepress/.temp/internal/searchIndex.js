@@ -52,6 +52,13 @@ export const SEARCH_INDEX = [
           },
           {
             "level": 3,
+            "title": "Product model example (thumbnail + gallery)",
+            "slug": "product-model-example-thumbnail-gallery",
+            "link": "#product-model-example-thumbnail-gallery",
+            "children": []
+          },
+          {
+            "level": 3,
             "title": "Upload bindings",
             "slug": "upload-bindings",
             "link": "#upload-bindings",
@@ -137,6 +144,13 @@ export const SEARCH_INDEX = [
         "slug": "rendering-the-livewire-component",
         "link": "#rendering-the-livewire-component",
         "children": [
+          {
+            "level": 3,
+            "title": "Stylesheet directive",
+            "slug": "stylesheet-directive",
+            "link": "#stylesheet-directive",
+            "children": []
+          },
           {
             "level": 3,
             "title": "Opening the modal programmatically",

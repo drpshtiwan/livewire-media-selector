@@ -10,7 +10,7 @@ export default defineUserConfig({
     'Documentation for the Livewire-based media selector with performance-oriented best practices.',
   dest: '../docs',
   theme: defaultTheme({
-    repo: 'DrPshtiwan/lararvel-media-selector',
+    repo: 'drpshtiwan/livewire-media-selector',
     docsDir: 'docs-src',
     lastUpdatedText: 'Updated on',
     navbar: [

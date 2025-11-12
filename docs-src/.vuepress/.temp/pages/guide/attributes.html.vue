@@ -231,7 +231,69 @@
 <span class="line">/&gt;</span>
 <span class="line"></span></code></pre>
 <div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>Each example can be combined—attributes layer on top of configuration defaults so you can tailor the selector per use-case.</p>
-<h3 id="upload-bindings" tabindex="-1"><a class="header-anchor" href="#upload-bindings"><span>Upload bindings</span></a></h3>
+<h3 id="product-model-example-thumbnail-gallery" tabindex="-1"><a class="header-anchor" href="#product-model-example-thumbnail-gallery"><span>Product model example (thumbnail + gallery)</span></a></h3>
+<p>Assuming your <code v-pre>Product</code> model uses the <code v-pre>HasMediaSelector</code> trait:</p>
+<div class="language-php line-numbers-mode" data-highlighter="prismjs" data-ext="php"><pre v-pre><code class="language-php"><span class="line"><span class="token keyword">class</span> <span class="token class-name-definition class-name">Product</span> <span class="token keyword">extends</span> <span class="token class-name">Model</span></span>
+<span class="line"><span class="token punctuation">{</span></span>
+<span class="line">    <span class="token keyword">use</span> <span class="token package">HasMediaSelector</span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>In your Livewire component:</p>
+<div class="language-php line-numbers-mode" data-highlighter="prismjs" data-ext="php"><pre v-pre><code class="language-php"><span class="line"><span class="token keyword">class</span> <span class="token class-name-definition class-name">EditProduct</span> <span class="token keyword">extends</span> <span class="token class-name">Component</span></span>
+<span class="line"><span class="token punctuation">{</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token class-name type-declaration">Product</span> <span class="token variable">$product</span><span class="token punctuation">;</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token keyword type-declaration">array</span><span class="token operator">|</span><span class="token keyword type-declaration">null</span> <span class="token variable">$thumbnail</span> <span class="token operator">=</span> <span class="token constant">null</span><span class="token punctuation">;</span></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token keyword type-declaration">array</span> <span class="token variable">$gallery</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function-definition function">mount</span><span class="token punctuation">(</span><span class="token class-name type-declaration">Product</span> <span class="token variable">$product</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">void</span></span>
+<span class="line">    <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">product</span> <span class="token operator">=</span> <span class="token class-name static-context">Product</span><span class="token operator">::</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token punctuation">)</span></span>
+<span class="line">            <span class="token operator">-></span><span class="token function">withMediaCollection</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'gallery'</span><span class="token punctuation">)</span></span>
+<span class="line">            <span class="token operator">-></span><span class="token function">findOrFail</span><span class="token punctuation">(</span><span class="token variable">$product</span><span class="token operator">-></span><span class="token function">getKey</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">        <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">thumbnail</span> <span class="token operator">=</span> <span class="token variable">$product</span><span class="token operator">-></span><span class="token function">getMediaPayload</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'thumbnail'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">gallery</span> <span class="token operator">=</span> <span class="token variable">$product</span><span class="token operator">-></span><span class="token function">getMediaPayload</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'gallery'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line"></span>
+<span class="line">    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function-definition function">save</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">void</span></span>
+<span class="line">    <span class="token punctuation">{</span></span>
+<span class="line">        <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">product</span><span class="token operator">-></span><span class="token function">syncMedia</span><span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token property">thumbnail</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'thumbnail'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">        <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">product</span><span class="token operator">-></span><span class="token function">syncMedia</span><span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token property">gallery</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'gallery'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span>
+<span class="line">        <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'product-saved'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line">    <span class="token punctuation">}</span></span>
+<span class="line"><span class="token punctuation">}</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>Blade view:</p>
+<div class="language-blade line-numbers-mode" data-highlighter="prismjs" data-ext="blade"><pre v-pre><code class="language-blade"><span class="line">&lt;div class=&quot;space-y-6&quot;&gt;</span>
+<span class="line">    &lt;div&gt;</span>
+<span class="line">        &lt;h3 class=&quot;font-semibold mb-2&quot;&gt;Thumbnail&lt;/h3&gt;</span>
+<span class="line">        &lt;livewire:media-selector</span>
+<span class="line">            wire:model=&quot;thumbnail&quot;</span>
+<span class="line">            collection=&quot;thumbnail&quot;</span>
+<span class="line">            :multiple=&quot;false&quot;</span>
+<span class="line">            :require-width=&quot;800&quot;</span>
+<span class="line">            :require-height=&quot;600&quot;</span>
+<span class="line">        /&gt;</span>
+<span class="line">    &lt;/div&gt;</span>
+<span class="line"></span>
+<span class="line">    &lt;div&gt;</span>
+<span class="line">        &lt;h3 class=&quot;font-semibold mb-2&quot;&gt;Gallery&lt;/h3&gt;</span>
+<span class="line">        &lt;livewire:media-selector</span>
+<span class="line">            wire:model=&quot;gallery&quot;</span>
+<span class="line">            collection=&quot;gallery&quot;</span>
+<span class="line">            :multiple=&quot;true&quot;</span>
+<span class="line">            :can-upload=&quot;true&quot;</span>
+<span class="line">            :can-delete=&quot;true&quot;</span>
+<span class="line">        /&gt;</span>
+<span class="line">    &lt;/div&gt;</span>
+<span class="line">&lt;/div&gt;</span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>Whenever you need to render images on the storefront:</p>
+<div class="language-php line-numbers-mode" data-highlighter="prismjs" data-ext="php"><pre v-pre><code class="language-php"><span class="line"><span class="token variable">$thumbUrl</span> <span class="token operator">=</span> <span class="token variable">$product</span><span class="token operator">-></span><span class="token function">getMediaUrl</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'thumbnail'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"><span class="token variable">$galleryUrls</span> <span class="token operator">=</span> <span class="token variable">$product</span><span class="token operator">-></span><span class="token function">getMediaUrls</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'gallery'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
+<span class="line"></span></code></pre>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="upload-bindings" tabindex="-1"><a class="header-anchor" href="#upload-bindings"><span>Upload bindings</span></a></h3>
 <ul>
 <li><code v-pre>uploads</code> / <code v-pre>:uploads</code> — Bind an array of <code v-pre>UploadedFile</code> instances if you handle uploads manually. Typically managed by the component when users pick files via the modal.</li>
 <li><code v-pre>accept</code> — Exposes the computed <code v-pre>accept</code> string used for <code v-pre>&lt;input type=&quot;file&quot; accept=&quot;...&quot;&gt;</code>. Usually derived automatically from <code v-pre>mimes</code> and <code v-pre>extensions</code>.</li>

@@ -33,13 +33,4 @@ This site explains how to install, configure, and get the best performance from 
 - PHP 8.2 or newer
 - Laravel 10 or newer
 - Livewire 3.x
-- Node.js 18+ (for asset builds and this documentation site)
 
-## Docs URL
-
-Visit [livewire-media.thejano.com](http://livewire-media.thejano.com/) for the hosted documentation with global search across every guide.
-
-```blade
-@livewireStyles
-@mediaSelectorStyles
-```

@@ -74,7 +74,7 @@
 <td><code v-pre>ui</code></td>
 <td><code v-pre>string</code></td>
 <td><code v-pre>config('media-selector.ui', 'tailwind')</code></td>
-<td>Switches between the Tailwind and Bootstrap UI variants.</td>
+<td>UI variant. Currently supports <code v-pre>tailwind</code>.</td>
 </tr>
 <tr>
 <td><code v-pre>disk</code></td>
@@ -99,6 +99,12 @@
 <td><code v-pre>int</code></td>
 <td><code v-pre>config('media-selector.max_upload_kb', 5120)</code></td>
 <td>Maximum upload size in kilobytes.</td>
+</tr>
+<tr>
+<td><code v-pre>show-thumbnails</code> / <code v-pre>:show-thumbnails</code></td>
+<td><code v-pre>bool</code></td>
+<td><code v-pre>config('media-selector.show_thumbnails', true)</code></td>
+<td>Shows or hides rendered image thumbnails in the selected preview area below Clear/Choose Media. When <code v-pre>false</code>, that preview area is not rendered; modal grids are unaffected.</td>
 </tr>
 <tr>
 <td><code v-pre>require-width</code> / <code v-pre>:require-width</code></td>
@@ -204,10 +210,10 @@
 <span class="line">    <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">post</span><span class="token operator">-></span><span class="token function">syncMedia</span><span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token property">gallery</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'gallery'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span>
 <span class="line"><span class="token punctuation">}</span></span>
 <span class="line"></span></code></pre>
-<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="bootstrap-ui-video-only-uploads" tabindex="-1"><a class="header-anchor" href="#bootstrap-ui-video-only-uploads"><span>Bootstrap UI, video-only uploads</span></a></h3>
+<div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="tailwind-ui-video-only-uploads" tabindex="-1"><a class="header-anchor" href="#tailwind-ui-video-only-uploads"><span>Tailwind UI, video-only uploads</span></a></h3>
 <div class="language-blade line-numbers-mode" data-highlighter="prismjs" data-ext="blade"><pre v-pre><code class="language-blade"><span class="line">&lt;livewire:media-selector</span>
 <span class="line">    wire:model=&quot;videos&quot;</span>
-<span class="line">    ui=&quot;bootstrap&quot;</span>
+<span class="line">    ui=&quot;tailwind&quot;</span>
 <span class="line">    mimes='[&quot;video/*&quot;]'</span>
 <span class="line">    :multiple=&quot;true&quot;</span>
 <span class="line">/&gt;</span>

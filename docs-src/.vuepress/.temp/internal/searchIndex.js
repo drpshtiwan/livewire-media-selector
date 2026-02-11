@@ -31,9 +31,9 @@ export const SEARCH_INDEX = [
           },
           {
             "level": 3,
-            "title": "Bootstrap UI, video-only uploads",
-            "slug": "bootstrap-ui-video-only-uploads",
-            "link": "#bootstrap-ui-video-only-uploads",
+            "title": "Tailwind UI, video-only uploads",
+            "slug": "tailwind-ui-video-only-uploads",
+            "link": "#tailwind-ui-video-only-uploads",
             "children": []
           },
           {
@@ -75,6 +75,57 @@ export const SEARCH_INDEX = [
       }
     ],
     "path": "/guide/attributes.html",
+    "pathLocale": "/",
+    "extraFields": []
+  },
+  {
+    "title": "Changelog",
+    "headers": [
+      {
+        "level": 2,
+        "title": "Unreleased",
+        "slug": "unreleased",
+        "link": "#unreleased",
+        "children": [
+          {
+            "level": 3,
+            "title": "Added",
+            "slug": "added",
+            "link": "#added",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "Fixed",
+            "slug": "fixed",
+            "link": "#fixed",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "Changed",
+            "slug": "changed",
+            "link": "#changed",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "Docs",
+            "slug": "docs",
+            "link": "#docs",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "Planned Features",
+            "slug": "planned-features",
+            "link": "#planned-features",
+            "children": []
+          }
+        ]
+      }
+    ],
+    "path": "/guide/changelog.html",
     "pathLocale": "/",
     "extraFields": []
   },

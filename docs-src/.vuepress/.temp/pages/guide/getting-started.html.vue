@@ -1,7 +1,7 @@
 <template><div><h1 id="getting-started" tabindex="-1"><a class="header-anchor" href="#getting-started"><span>Getting Started</span></a></h1>
 <p>This guide walks you through installing the package, publishing assets, and rendering the Livewire media selector in your application.</p>
 <h2 id="installation" tabindex="-1"><a class="header-anchor" href="#installation"><span>Installation</span></a></h2>
-<div class="language-bash line-numbers-mode" data-highlighter="prismjs" data-ext="sh"><pre v-pre><code class="language-bash"><span class="line"><span class="token function">composer</span> require drpshtiwan/laravel-media-selector</span>
+<div class="language-bash line-numbers-mode" data-highlighter="prismjs" data-ext="sh"><pre v-pre><code class="language-bash"><span class="line"><span class="token function">composer</span> require drpshtiwan/livewire-media-selector</span>
 <span class="line"></span></code></pre>
 <div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0"><div class="line-number"></div></div></div><p>Publish the default configuration and migrations if you need to customize them:</p>
 <div class="language-bash line-numbers-mode" data-highlighter="prismjs" data-ext="sh"><pre v-pre><code class="language-bash"><span class="line">php artisan vendor:publish <span class="token parameter variable">--tag</span><span class="token operator">=</span>media-selector-config</span>

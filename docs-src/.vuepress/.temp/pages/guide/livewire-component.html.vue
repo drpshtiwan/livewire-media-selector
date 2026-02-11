@@ -1,5 +1,5 @@
 <template><div><h1 id="livewire-integration" tabindex="-1"><a class="header-anchor" href="#livewire-integration"><span>Livewire Integration</span></a></h1>
-<p>The media selector ships as a Livewire 3 component and is optimized for parent-child data binding.</p>
+<p>The media selector ships as a Livewire 3/4 component and is optimized for parent-child data binding.</p>
 <h2 id="using-wire-model" tabindex="-1"><a class="header-anchor" href="#using-wire-model"><span>Using <code v-pre>wire:model</code></span></a></h2>
 <div class="language-blade line-numbers-mode" data-highlighter="prismjs" data-ext="blade"><pre v-pre><code class="language-blade"><span class="line">&lt;livewire:media-selector wire:model=&quot;postMedia&quot; /&gt;</span>
 <span class="line"></span></code></pre>

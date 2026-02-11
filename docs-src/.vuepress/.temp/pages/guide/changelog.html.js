@@ -1,0 +1,3 @@
+import comp from "/Users/pshiwanmahmood/code/packages/lararvel-media-selector/docs-src/.vuepress/.temp/pages/guide/changelog.html.vue"
+const data = JSON.parse("{\"path\":\"/guide/changelog.html\",\"title\":\"Changelog\",\"lang\":\"en-US\",\"frontmatter\":{},\"git\":{\"updatedTime\":1770773505000,\"contributors\":[{\"name\":\"Pshtiwan Mahmood\",\"username\":\"\",\"email\":\"kardoey@gmail.com\",\"commits\":1}],\"changelog\":[{\"hash\":\"00224ff14de4344dcc4741ec9bf657c373992cf0\",\"time\":1770773505000,\"email\":\"kardoey@gmail.com\",\"author\":\"Pshtiwan Mahmood\",\"message\":\"Support livewire 4 and fix issues ;\"}]},\"filePathRelative\":\"guide/changelog.md\"}")
+export { comp, data }

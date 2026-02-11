@@ -22,12 +22,13 @@ This site explains how to install, configure, and get the best performance from 
 <li><RouteLink to="/guide/livewire-component.html">Livewire Integration</RouteLink></li>
 <li><RouteLink to="/guide/performance.html">Performance Playbook</RouteLink></li>
 <li><RouteLink to="/guide/testing.html">Testing Recipes</RouteLink></li>
+<li><RouteLink to="/guide/changelog.html">Changelog</RouteLink></li>
 </ul>
 <h2 id="requirements" tabindex="-1"><a class="header-anchor" href="#requirements"><span>Requirements</span></a></h2>
 <ul>
 <li>PHP 8.2 or newer</li>
 <li>Laravel 10 or newer</li>
-<li>Livewire 3.x</li>
+<li>Livewire 3.x or 4.x</li>
 </ul>
 </div></template>
 

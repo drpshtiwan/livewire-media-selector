@@ -26,3 +26,13 @@ All notable changes to `drpshtiwan/livewire-media-selector` are documented in th
 - Fixed docs install command to use `composer require drpshtiwan/livewire-media-selector`.
 - Added docs for `show_thumbnails` and `show-thumbnails`.
 - Synced attribute docs with actual `wire:model` payload behavior.
+
+### Planned Features
+- Authorization policy integration (Gate/Policy hooks per action/item).
+- Pluggable UI templates/slots for media card rendering.
+- Advanced uploads (chunked, resumable, direct-to-cloud options).
+- Media editing tools (crop/rotate/resize before save).
+- Rich organization (folders, tags, favorites, metadata filters).
+- Accessibility upgrades (focus trap and stronger keyboard navigation).
+- Bulk actions (move, download, metadata edit, select-all workflows).
+- Optional strict single-select payload mode (single object output).

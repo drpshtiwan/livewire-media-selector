@@ -24,4 +24,14 @@ This page summarizes recent package updates.
 - Install command corrected to `composer require drpshtiwan/livewire-media-selector`.
 - Attribute docs aligned with current `wire:model` payload behavior.
 
+### Planned Features
+- Authorization policy integration (Gate/Policy hooks per action/item).
+- Pluggable UI templates/slots for media card rendering.
+- Advanced uploads (chunked, resumable, direct-to-cloud options).
+- Media editing tools (crop/rotate/resize before save).
+- Rich organization (folders, tags, favorites, metadata filters).
+- Accessibility upgrades (focus trap and stronger keyboard navigation).
+- Bulk actions (move, download, metadata edit, select-all workflows).
+- Optional strict single-select payload mode (single object output).
+
 For full details, see the root package changelog: [`CHANGELOG.md`](../../../CHANGELOG.md).

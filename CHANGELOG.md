@@ -2,7 +2,7 @@
 
 All notable changes to `drpshtiwan/livewire-media-selector` are documented in this file.
 
-## [Unreleased]
+## 3.0.0
 
 ### Added
 - Livewire 4 compatibility is maintained, including event-dispatch behavior coverage in tests.

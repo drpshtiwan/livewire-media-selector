@@ -44,9 +44,9 @@ Full documentation: [livewire-media.thejano.com](http://livewire-media.thejano.c
 
 - PHP >= 8.1
 - Laravel 10–12
-- Livewire 3.3+
+- Livewire 3.3+ or 4.x
 
-Note: Livewire 3 requires Laravel 10+. If you need Laravel 9 support, a Livewire v2–compatible variant is required (not included in this package version).
+Note: Livewire 3+ requires Laravel 10+. If you need Laravel 9 support, a Livewire v2–compatible variant is required (not included in this package version).
 
 Require the package:
 
@@ -92,6 +92,10 @@ Simple usage:
 ```
 
 [Read the docs](http://livewire-media.thejano.com/) for setup details, configuration options, and integration patterns.
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for recent and upcoming changes.
 
 ## Developer
 

@@ -10,7 +10,7 @@
 
 
 
-    @if(is_array($value) && count($value))
+    @if($showThumbnails && is_array($value) && count($value))
         <div class="lms-mt-3 lms-grid lms-grid-cols-2 md:lms-grid-cols-3 lg:lms-grid-cols-4 lms-gap-2">
             @foreach($value as $val)
                 @php($__path = is_array($val) ? ($val['path'] ?? '') : $val)
@@ -22,11 +22,13 @@
                      x-on:dragstart="$event.dataTransfer.setData('from','{{ $loop->index }}')"
                      x-on:dragover.prevent
                      x-on:drop.prevent="$wire.moveValueItem(parseInt($event.dataTransfer.getData('from')), {{ $loop->index }})">
-                    @php($mime = $__path ? (Storage::disk($this->disk)->mimeType($__path) ?? null) : null)
+                    @php($mime = $__path ? $this->safeMimeType($__path) : null)
                     @php($ext = $__path ? strtolower((string) pathinfo($__path, PATHINFO_EXTENSION)) : null)
                     @php($isImageExt = in_array($ext, ['jpg','jpeg','png','gif','webp','bmp','svg','avif','jfif']))
-                    @if((($__mimeProvided ?? $mime) && str_starts_with((string)($__mimeProvided ?? $mime), 'image/')) || $isImageExt)
-                        <img src="{{ $__path ? Storage::disk($this->disk)->url($__path) : '' }}" alt="Selected" class="lms-w-full lms-h-full lms-object-cover" />
+                    @php($isImagePreview = ((($__mimeProvided ?? $mime) && str_starts_with((string)($__mimeProvided ?? $mime), 'image/')) || $isImageExt))
+                    @php($shouldRenderThumb = $showThumbnails && $isImagePreview)
+                    @if($shouldRenderThumb)
+                        <img src="{{ $__path ? $this->safeUrl($__path) : '' }}" alt="Selected" class="lms-w-full lms-h-full lms-object-cover" />
                     @else
                         <div class="lms-w-full lms-h-full lms-grid lms-place-items-center lms-text-[11px] lms-text-gray-600 lms-bg-gray-50">
                             <div class="lms-flex lms-items-center lms-gap-1">
@@ -43,7 +45,7 @@
                                 <path d="M18 6 6 18M6 6l12 12" />
                             </svg>
                         </button>
-                        <button type="button" class="lms-inline-flex lms-items-center lms-justify-center lms-w-6 lms-h-6 lms-rounded-md lms-bg-white/90 lms-border hover:lms-bg-gray-100" title="Copy URL" x-on:click.stop.prevent="const __t = @js($__path ? Storage::disk($this->disk)->url($__path) : ''); if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(__t); } else { const ta=document.createElement('textarea'); ta.value=__t; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.top='-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); } $dispatch('toast', { message: @js(($mime && str_starts_with($mime,'video/')) ? 'Video URL copied' : (($mime && str_starts_with($mime,'audio/')) ? 'Audio URL copied' : 'URL copied')) });" aria-label="Copy URL">
+                        <button type="button" class="lms-inline-flex lms-items-center lms-justify-center lms-w-6 lms-h-6 lms-rounded-md lms-bg-white/90 lms-border hover:lms-bg-gray-100" title="Copy URL" x-on:click.stop.prevent="const __t = @js($__path ? $this->safeUrl($__path) : ''); if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(__t); } else { const ta=document.createElement('textarea'); ta.value=__t; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.top='-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); } $dispatch('toast', { message: @js(($mime && str_starts_with($mime,'video/')) ? 'Video URL copied' : (($mime && str_starts_with($mime,'audio/')) ? 'Audio URL copied' : 'URL copied')) });" aria-label="Copy URL">
                             <svg viewBox="0 0 24 24" class="lms-w-3.5 lms-h-3.5 lms-text-gray-700" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
@@ -64,14 +66,16 @@
                 </div>
             @endforeach
         </div>
-    @elseif(is_string($value) && $value)
-        @php($__mime = Storage::disk($this->disk)->mimeType($value) ?? null)
+    @elseif($showThumbnails && is_string($value) && $value)
+        @php($__mime = $this->safeMimeType($value))
         @php($__ext = strtolower((string) pathinfo($value, PATHINFO_EXTENSION)))
         @php($__isImageExt = in_array($__ext, ['jpg','jpeg','png','gif','webp','bmp','svg','avif','jfif']))
+        @php($__isImagePreview = ((($__mime ?? null) && str_starts_with($__mime, 'image/')) || $__isImageExt))
+        @php($__shouldRenderThumb = $showThumbnails && $__isImagePreview)
         <div class="lms-mt-3">
             <div class="lms-relative lms-w-64 lms-h-64 lms-border lms-rounded lms-overflow-hidden lms-bg-gray-50 lms-group">
-                @if((($__mime ?? null) && str_starts_with($__mime, 'image/')) || $__isImageExt)
-                    <img src="{{ Storage::disk($this->disk)->url($value) }}" alt="Selected media" class="lms-w-full lms-h-full lms-object-cover" />
+                @if($__shouldRenderThumb)
+                    <img src="{{ $this->safeUrl($value) }}" alt="Selected media" class="lms-w-full lms-h-full lms-object-cover" />
                 @else
                     <div class="lms-absolute lms-inset-0 lms-grid lms-place-items-center lms-text-sm lms-text-gray-600">
                         <div class="lms-flex lms-items-center lms-gap-2">
@@ -82,7 +86,7 @@
                         </div>
                     </div>
                 @endif
-                <button type="button" class="lms-absolute lms-top-2 lms-right-2 lms-z-10 lms-inline-flex lms-items-center lms-justify-center lms-w-8 lms-h-8 lms-rounded-md lms-bg-white/90 lms-border hover:lms-bg-gray-100 lms-opacity-0 group-hover:lms-opacity-100 lms-pointer-events-none group-hover:lms-pointer-events-auto lms-transition" title="Copy URL" x-on:click.stop.prevent="const __t = @js(Storage::disk($this->disk)->url($value)); if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(__t); } else { const ta=document.createElement('textarea'); ta.value=__t; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.top='-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); } $dispatch('toast', { message: @js((($__mime ?? null) && str_starts_with($__mime,'video/')) ? 'Video URL copied' : (((($__mime ?? null)) && str_starts_with($__mime,'audio/')) ? 'Audio URL copied' : 'URL copied')) });" aria-label="Copy URL">
+                <button type="button" class="lms-absolute lms-top-2 lms-right-2 lms-z-10 lms-inline-flex lms-items-center lms-justify-center lms-w-8 lms-h-8 lms-rounded-md lms-bg-white/90 lms-border hover:lms-bg-gray-100 lms-opacity-0 group-hover:lms-opacity-100 lms-pointer-events-none group-hover:lms-pointer-events-auto lms-transition" title="Copy URL" x-on:click.stop.prevent="const __t = @js($this->safeUrl($value)); if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(__t); } else { const ta=document.createElement('textarea'); ta.value=__t; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.top='-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); } $dispatch('toast', { message: @js((($__mime ?? null) && str_starts_with($__mime,'video/')) ? 'Video URL copied' : (((($__mime ?? null)) && str_starts_with($__mime,'audio/')) ? 'Audio URL copied' : 'URL copied')) });" aria-label="Copy URL">
                     <svg viewBox="0 0 24 24" class="lms-w-4 lms-h-4 lms-text-gray-700" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
@@ -150,7 +154,8 @@
 
                                                 @php($__extLower = strtolower((string) pathinfo($item->filename ?? '', PATHINFO_EXTENSION)))
                                                 @php($__isImageByExt = in_array($__extLower, ['jpg','jpeg','png','gif','webp','bmp','svg','avif','jfif']))
-                                                @if((method_exists($item, 'isPreviewable') ? $item->isPreviewable() : false) || ($item->mime && str_starts_with((string)$item->mime, 'image/')) || $__isImageByExt)
+                                                @php($__isImagePreview = (method_exists($item, 'isPreviewable') ? $item->isPreviewable() : false) || ($item->mime && str_starts_with((string)$item->mime, 'image/')) || $__isImageByExt)
+                                                @if($__isImagePreview)
                                                     <img src="{{ $item->url }}" alt="{{ $item->filename }}" class="lms-w-full lms-h-full lms-object-cover" />
                                                 @else
                                                     <div class="lms-w-full lms-h-full lms-grid lms-place-items-center lms-text-sm lms-text-gray-600 lms-bg-gray-50">
@@ -213,7 +218,8 @@
                                             <button type="button" class="lms-absolute lms-inset-0 lms-z-0 lms-border lms-rounded-lg lms-overflow-hidden hover:lms-shadow" wire:click="toggleSelect({{ $item->id }})">
                                                 @php($__extLower = strtolower((string) pathinfo($item->filename ?? '', PATHINFO_EXTENSION)))
                                                 @php($__isImageByExt = in_array($__extLower, ['jpg','jpeg','png','gif','webp','bmp','svg','avif','jfif']))
-                                                @if((method_exists($item, 'isPreviewable') ? $item->isPreviewable() : false) || ($item->mime && str_starts_with((string)$item->mime, 'image/')) || $__isImageByExt)
+                                                @php($__isImagePreview = (method_exists($item, 'isPreviewable') ? $item->isPreviewable() : false) || ($item->mime && str_starts_with((string)$item->mime, 'image/')) || $__isImageByExt)
+                                                @if($__isImagePreview)
                                                     <img src="{{ $item->url }}" alt="{{ $item->filename }}" class="lms-w-full lms-h-full lms-object-cover" />
                                                 @else
                                                     <div class="lms-w-full lms-h-full lms-grid lms-place-items-center lms-text-sm lms-text-gray-600 lms-bg-gray-50">
@@ -329,7 +335,8 @@
                                                     @php($tName = method_exists($temp,'getClientOriginalName') ? (string) $temp->getClientOriginalName() : '')
                                                     @php($tExtLower = strtolower((string) pathinfo($tName, PATHINFO_EXTENSION)))
                                                     @php($isImageExt = in_array($tExtLower, ['jpg','jpeg','png','gif','webp','bmp','svg']))
-                                                    @if((($tMime && str_starts_with($tMime, 'image/')) || $isImageExt) && method_exists($temp, 'temporaryUrl'))
+                                                    @php($canRenderThumb = ((($tMime && str_starts_with($tMime, 'image/')) || $isImageExt) && method_exists($temp, 'temporaryUrl')))
+                                                    @if($canRenderThumb)
                                                         <img src="{{ $temp->temporaryUrl() }}" class="lms-w-full lms-h-full lms-object-cover" alt="" />
                                                     @else
                                                         @php($tExt = strtoupper((string) pathinfo($tName, PATHINFO_EXTENSION)))

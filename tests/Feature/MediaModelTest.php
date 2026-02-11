@@ -1,6 +1,8 @@
 <?php
 
 use DrPshtiwan\LivewireMediaSelector\Models\Media;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 it('creates media and exposes url and extension accessors', function () {
@@ -57,4 +59,43 @@ it('scopes by disk, collection and can search and previewable', function () {
 
     $previewable = Media::query()->previewable()->pluck('id');
     expect($previewable)->toContain($m1->id)->not()->toContain($m2->id);
+});
+
+it('uses configured table name for media model', function () {
+    Schema::dropIfExists('custom_media_table');
+    Schema::create('custom_media_table', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('user_id')->nullable();
+        $table->string('disk');
+        $table->string('path');
+        $table->string('filename');
+        $table->string('collection')->nullable();
+        $table->string('mime')->nullable();
+        $table->unsignedBigInteger('size')->default(0);
+        $table->unsignedInteger('width')->nullable();
+        $table->unsignedInteger('height')->nullable();
+        $table->json('metadata')->nullable();
+        $table->timestamps();
+        $table->softDeletes();
+    });
+
+    config()->set('media-selector.table', 'custom_media_table');
+
+    $media = new Media;
+    expect($media->getTable())->toBe('custom_media_table');
+
+    Media::create([
+        'disk' => 'public',
+        'path' => 'media/custom.jpg',
+        'filename' => 'custom.jpg',
+        'collection' => null,
+        'mime' => 'image/jpeg',
+        'size' => 1,
+    ]);
+
+    expect(Schema::hasTable('custom_media_table'))->toBeTrue();
+    expect(Media::query()->count())->toBe(1);
+
+    Schema::dropIfExists('custom_media_table');
+    config()->set('media-selector.table', 'media_selector_media');
 });

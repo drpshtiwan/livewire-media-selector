@@ -37,6 +37,11 @@ class Media extends Model
         'metadata' => 'array',
     ];
 
+    public function getTable(): string
+    {
+        return (string) Config::get('media-selector.table', self::TABLE);
+    }
+
     public function getUrlAttribute(): string
     {
         /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */

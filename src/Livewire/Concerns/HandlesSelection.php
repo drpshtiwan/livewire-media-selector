@@ -28,8 +28,9 @@ trait HandlesSelection
             return;
         }
 
-        $mediaClass = $this->mediaClass;
-        $media = $mediaClass::find($id);
+        $media = $this->scopedMediaQuery(
+            onlyTrashed: $this->activeTab === 'trash' && $this->canSeeTrash
+        )->find($id);
         if (! $media) {
             $this->addError('selection', 'The selected media item could not be found.');
 
@@ -148,10 +149,21 @@ trait HandlesSelection
             return;
         }
 
-        $mediaClass = $this->mediaClass;
+        if ($this->activeTab === 'trash') {
+            $this->addError('selection', 'Cannot insert media from trash.');
+
+            return;
+        }
+
         $this->selectedIds = array_values(array_unique(array_map(fn ($v) => (int) $v, $this->selectedIds)));
 
-        $records = $mediaClass::query()->whereIn('id', $this->selectedIds)->get();
+        $records = $this->scopedMediaQuery()->whereIn('id', $this->selectedIds)->get();
+
+        if ($records->count() !== count($this->selectedIds)) {
+            $this->addError('selection', 'One or more selected media items are unavailable.');
+
+            return;
+        }
 
         foreach ($records as $record) {
             $constraintError = $this->validateMediaSelectionConstraints($record);

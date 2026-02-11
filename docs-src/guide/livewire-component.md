@@ -1,6 +1,6 @@
 # Livewire Integration
 
-The media selector ships as a Livewire 3 component and is optimized for parent-child data binding.
+The media selector ships as a Livewire 3/4 component and is optimized for parent-child data binding.
 
 ## Using `wire:model`
 
@@ -67,4 +67,3 @@ $post->getMediaUrls('gallery'); // all URLs
 ```
 
 This ensures cache-friendly lookups that respect eager-loaded relations and disk-specific URL generation.
-

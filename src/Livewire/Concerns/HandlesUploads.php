@@ -61,7 +61,7 @@ trait HandlesUploads
 
                 $allowedExtensions = array_values(array_filter(array_map(
                     fn ($ext) => is_string($ext) ? strtolower($ext) : null,
-                    array_diff($this->allowedExtensions, ['svg'])
+                    $this->allowedExtensions
                 )));
 
                 if ($extension === null || ($allowedExtensions && ! in_array($extension, $allowedExtensions, true))) {

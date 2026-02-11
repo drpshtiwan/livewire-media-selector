@@ -5,7 +5,7 @@ This guide walks you through installing the package, publishing assets, and rend
 ## Installation
 
 ```bash
-composer require drpshtiwan/laravel-media-selector
+composer require drpshtiwan/livewire-media-selector
 ```
 
 Publish the default configuration and migrations if you need to customize them:
@@ -89,4 +89,3 @@ When the user confirms their selection, the component updates `wire:model` with 
 ```
 
 You can store the payload or call `$post->syncMedia($payload, 'gallery');` to persist the relation.
-

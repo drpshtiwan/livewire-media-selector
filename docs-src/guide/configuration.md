@@ -23,10 +23,11 @@ Use the trait helper `getMediaUrls()` or `getMediaUrl()` to resolve storage URLs
 - `can_upload` / `can_delete` — gate destructive actions.
 - `can_see_trash` / `can_restore_trash` — expose soft-deleted media management.
 - `restrict_to_current_user` — scope listings to the authenticated user’s uploads.
+- `show_thumbnails` — toggles image thumbnails in the selected preview area below the Clear/Choose Media buttons. When disabled, that preview section is not rendered (modal grids are unaffected).
 
 ## UI flavor
 
-Switch between Tailwind (default) and Bootstrap markup:
+Use the Tailwind UI variant:
 
 ```php
 'ui' => env('MEDIA_SELECTOR_UI', 'tailwind'),
@@ -35,7 +36,7 @@ Switch between Tailwind (default) and Bootstrap markup:
 Per component override:
 
 ```blade
-<livewire:media-selector ui="bootstrap" />
+<livewire:media-selector ui="tailwind" />
 ```
 
 ## Custom filtering
@@ -54,4 +55,3 @@ public function apply($query, $component)
     $query->where('team_id', $component->teamId);
 }
 ```
-

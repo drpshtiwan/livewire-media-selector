@@ -3,8 +3,6 @@
 namespace DrPshtiwan\LivewireMediaSelector\Livewire\Concerns;
 
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 trait QueriesMedia
 {
@@ -17,30 +15,9 @@ trait QueriesMedia
             ]);
         }
 
-        $mediaClass = $this->mediaClass;
-
-        $query = $mediaClass::query()->where('disk', $this->disk);
-        if ($this->activeTab === 'trash' && $this->canSeeTrash) {
-            $query->onlyTrashed();
-        }
-
-        if ($this->restrictToCurrentUser) {
-            $query->where('user_id', Auth::id());
-        }
-
-        $extraScope = Config::get('media-selector.extra_scope');
-        if (is_string($extraScope) && str_contains($extraScope, '@')) {
-            [$class, $method] = explode('@', $extraScope, 2);
-            if (class_exists($class) && method_exists($class, $method)) {
-                (new $class)->{$method}($query, $this);
-            }
-        } elseif (is_callable($extraScope)) {
-            $extraScope($query, $this);
-        }
-
-        if (is_string($this->collection) && $this->collection !== '') {
-            $query->where('collection', $this->collection);
-        }
+        $query = $this->scopedMediaQuery(
+            onlyTrashed: $this->activeTab === 'trash' && $this->canSeeTrash
+        );
 
         if ($this->search !== '') {
             $term = '%'.$this->search.'%';

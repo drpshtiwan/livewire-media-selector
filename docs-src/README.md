@@ -27,10 +27,10 @@ This site explains how to install, configure, and get the best performance from 
 - [Livewire Integration](./guide/livewire-component.md)
 - [Performance Playbook](./guide/performance.md)
 - [Testing Recipes](./guide/testing.md)
+- [Changelog](./guide/changelog.md)
 
 ## Requirements
 
 - PHP 8.2 or newer
 - Laravel 10 or newer
-- Livewire 3.x
-
+- Livewire 3.x or 4.x

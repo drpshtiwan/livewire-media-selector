@@ -11,8 +11,10 @@ trait HasMediaSelector
 {
     public function media(): MorphToMany
     {
+        $mediaModel = (string) config('media-selector.model', Media::class);
+
         return $this->morphToMany(
-            Media::class,
+            $mediaModel,
             'mediable',
             config('media-selector.mediables_table', 'media_selector_mediables')
         )->withPivot(['collection', 'order_column'])->withTimestamps()->orderByPivot('order_column');

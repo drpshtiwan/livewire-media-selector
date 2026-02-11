@@ -10,7 +10,10 @@ use DrPshtiwan\LivewireMediaSelector\Livewire\Concerns\InteractsWithValue;
 use DrPshtiwan\LivewireMediaSelector\Livewire\Concerns\ManagesFilters;
 use DrPshtiwan\LivewireMediaSelector\Livewire\Concerns\QueriesMedia;
 use DrPshtiwan\LivewireMediaSelector\Models\Media;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Livewire\Attributes\Modelable;
 use Livewire\Component;
@@ -82,6 +85,8 @@ class MediaSelector extends Component
 
     public string $ui = 'tailwind';
 
+    public bool $showThumbnails = true;
+
     // These receive attributes from the Blade tag: :mimes="[...]" :extensions="[...]"
     public array|string $mimes = [];
 
@@ -93,16 +98,21 @@ class MediaSelector extends Component
 
     public array $selectedIds = [];
 
-    public function mount($value = null, ?bool $multiple = null, ?bool $canDelete = null, $extensions = null, $mimes = null, ?bool $canSeeTrash = null, ?bool $canRestoreTrash = null, ?string $ui = null, ?bool $canUpload = null, ?bool $restrictToCurrentUser = null, ?int $requireWidth = null, ?int $requireHeight = null, ?string $requireAspectRatio = null, ?string $collection = null): void
+    public function mount($value = null, ?bool $multiple = null, ?bool $canDelete = null, $extensions = null, $mimes = null, ?bool $canSeeTrash = null, ?bool $canRestoreTrash = null, ?string $ui = null, ?bool $canUpload = null, ?bool $restrictToCurrentUser = null, ?int $requireWidth = null, ?int $requireHeight = null, ?string $requireAspectRatio = null, ?string $collection = null, ?string $disk = null, ?string $directory = null, ?int $perPage = null, ?int $maxUploadKb = null, ?bool $showThumbnails = null): void
     {
         // Do not clobber model-bound value when using wire:model without passing :value explicitly
         if (is_array($value) || (is_string($value) && $value !== '') || is_int($value) || is_bool($value)) {
             $this->value = $value;
         }
-        $this->disk = (string) Config::get('media-selector.disk', 'public');
-        $this->directory = trim((string) Config::get('media-selector.directory', 'media'), '/');
-        $this->perPage = (int) Config::get('media-selector.per_page', 24);
-        $this->maxUploadKb = (int) Config::get('media-selector.max_upload_kb', 5120);
+        $resolvedDisk = trim((string) ($disk ?? ($this->disk ?? Config::get('media-selector.disk', 'public'))));
+        $resolvedDirectory = trim((string) ($directory ?? ($this->directory ?? Config::get('media-selector.directory', 'media'))), '/');
+        $resolvedPerPage = (int) ($perPage ?? ($this->perPage ?? Config::get('media-selector.per_page', 24)));
+        $resolvedMaxUploadKb = (int) ($maxUploadKb ?? ($this->maxUploadKb ?? Config::get('media-selector.max_upload_kb', 5120)));
+
+        $this->disk = $resolvedDisk !== '' ? $resolvedDisk : (string) Config::get('media-selector.disk', 'public');
+        $this->directory = $resolvedDirectory !== '' ? $resolvedDirectory : 'media';
+        $this->perPage = $resolvedPerPage > 0 ? $resolvedPerPage : 24;
+        $this->maxUploadKb = $resolvedMaxUploadKb > 0 ? $resolvedMaxUploadKb : 5120;
 
         // Helper to normalize input into an array of strings
         $normalize = function ($raw): array {
@@ -143,7 +153,9 @@ class MediaSelector extends Component
         $this->canUpload = (bool) ($canUpload ?? Config::get('media-selector.can_upload', true));
         $this->canSeeTrash = (bool) ($canSeeTrash ?? Config::get('media-selector.can_see_trash', false));
         $this->canRestoreTrash = (bool) ($canRestoreTrash ?? Config::get('media-selector.can_restore_trash', false));
-        $this->ui = (string) ($ui ?? Config::get('media-selector.ui', 'tailwind'));
+        $requestedUi = strtolower((string) ($ui ?? Config::get('media-selector.ui', 'tailwind')));
+        $this->ui = in_array($requestedUi, ['tailwind'], true) ? $requestedUi : 'tailwind';
+        $this->showThumbnails = (bool) ($showThumbnails ?? Config::get('media-selector.show_thumbnails', true));
         $this->restrictToCurrentUser = (bool) ($restrictToCurrentUser ?? Config::get('media-selector.restrict_to_current_user', false));
         $this->requireWidth = $requireWidth;
         $this->requireHeight = $requireHeight;
@@ -262,6 +274,68 @@ class MediaSelector extends Component
             'isMimeRestricted' => ($this->hasProvidedMimes && count($this->allowedMimes) > 0),
             'ui' => $this->ui,
         ]);
+    }
+
+    protected function scopedMediaQuery(bool $onlyTrashed = false, bool $withTrashed = false): Builder
+    {
+        $mediaClass = $this->mediaClass;
+        $query = $mediaClass::query()->where('disk', $this->disk);
+
+        if ($onlyTrashed) {
+            $query->onlyTrashed();
+        } elseif ($withTrashed) {
+            $query->withTrashed();
+        }
+
+        if ($this->restrictToCurrentUser) {
+            $query->where('user_id', Auth::id());
+        }
+
+        if (is_string($this->collection) && $this->collection !== '') {
+            $query->where('collection', $this->collection);
+        }
+
+        $extraScope = Config::get('media-selector.extra_scope');
+        if (is_string($extraScope) && str_contains($extraScope, '@')) {
+            [$class, $method] = explode('@', $extraScope, 2);
+            if (class_exists($class) && method_exists($class, $method)) {
+                (new $class)->{$method}($query, $this);
+            }
+        } elseif (is_callable($extraScope)) {
+            $extraScope($query, $this);
+        }
+
+        return $query;
+    }
+
+    public function safeMimeType(?string $path): ?string
+    {
+        if (! is_string($path) || $path === '') {
+            return null;
+        }
+
+        try {
+            $disk = Storage::disk($this->disk);
+
+            return method_exists($disk, 'mimeType') ? ($disk->mimeType($path) ?: null) : null;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    public function safeUrl(?string $path): string
+    {
+        if (! is_string($path) || $path === '') {
+            return '';
+        }
+
+        try {
+            $disk = Storage::disk($this->disk);
+
+            return (string) $disk->url($path);
+        } catch (\Throwable $e) {
+            return '';
+        }
     }
 
     // Use Livewire's built-in WithPagination::previousPage/nextPage methods

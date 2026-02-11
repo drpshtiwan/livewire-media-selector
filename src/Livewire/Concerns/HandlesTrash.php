@@ -11,8 +11,7 @@ trait HandlesTrash
         if (! $this->canDelete) {
             return;
         }
-        $mediaClass = $this->mediaClass;
-        $media = $mediaClass::query()->where('disk', $this->disk)->find($id);
+        $media = $this->scopedMediaQuery()->find($id);
         if (! $media) {
             return;
         }
@@ -35,15 +34,14 @@ trait HandlesTrash
         if (! $this->canRestoreTrash) {
             return;
         }
-        $mediaClass = $this->mediaClass;
-        $media = $mediaClass::withTrashed()->where('disk', $this->disk)->find($id);
+        $media = $this->scopedMediaQuery(onlyTrashed: true)->find($id);
         if (! $media) {
             return;
         }
         $media->restore();
         $this->selectedIds = array_values(array_diff($this->selectedIds, [$id]));
         $this->dispatch('media-restored', id: $id);
-        $this->resetPage();
+        $this->resetPage('lmsPage');
     }
 
     public function restoreSelected(): void
@@ -61,8 +59,7 @@ trait HandlesTrash
         if (! $this->canDelete) {
             return;
         }
-        $mediaClass = $this->mediaClass;
-        $media = $mediaClass::withTrashed()->where('disk', $this->disk)->find($id);
+        $media = $this->scopedMediaQuery(onlyTrashed: true)->find($id);
         if (! $media) {
             return;
         }
@@ -80,7 +77,7 @@ trait HandlesTrash
         $media->forceDelete();
         $this->selectedIds = array_values(array_diff($this->selectedIds, [$id]));
         $this->dispatch('media-deleted', id: $id);
-        $this->resetPage();
+        $this->resetPage('lmsPage');
     }
 
     public function forceDeleteSelected(): void

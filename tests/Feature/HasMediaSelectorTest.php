@@ -196,6 +196,15 @@ it('provides a scope to eager load media collections', function () {
     expect($queries)->toBeEmpty();
 });
 
+it('uses configured media model class for the morph relation', function () {
+    config()->set('media-selector.model', TestCustomMedia::class);
+
+    $model = new TestHasMediaModel;
+    $related = $model->media()->getRelated();
+
+    expect($related)->toBeInstanceOf(TestCustomMedia::class);
+});
+
 class TestHasMediaModel extends Model
 {
     use HasMediaSelector;
@@ -204,3 +213,5 @@ class TestHasMediaModel extends Model
 
     protected $guarded = [];
 }
+
+class TestCustomMedia extends Media {}

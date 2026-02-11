@@ -4,7 +4,7 @@ Pass these attributes directly to the `<livewire:media-selector />` component to
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `wire:model` / `wire:model.defer` | `array|string|null` | — | Binds the selected media payload to the parent component. The payload is an array of `{ id, collection, path }` items when multiple selection is enabled, or a single object / string in single mode. |
+| `wire:model` / `wire:model.defer` | `array|string|null` | — | Binds the selected media payload to the parent component. Confirmed selections are emitted as `{ id, collection, path }` payload arrays (single-select typically returns one-item array; multi-select returns many). |
 | `collection` | `string|null` | `null` | Filters the grid to a specific collection and ensures new uploads are saved under the same collection value. |
 | `multiple` | `bool` | `config('media-selector.multiple', false)` | Enables multi-select mode. When `false`, the selector behaves like a single-value input. |
 | `can-upload` / `:can-upload` | `bool` | `config('media-selector.can_upload', true)` | Toggles the Upload tab and the ability to upload new files. |
@@ -14,11 +14,12 @@ Pass these attributes directly to the `<livewire:media-selector />` component to
 | `restrict-to-current-user` / `:restrict-to-current-user` | `bool` | `config('media-selector.restrict_to_current_user', false)` | Limits the query to records owned by the authenticated user (`user_id = Auth::id()`). |
 | `extensions` / `:extensions` | `array|string` | `config('media-selector.allowed_extensions', [...])` | Restricts uploads to specific file extensions. Accepts an array or comma-separated string (e.g. `"jpg,png,webp"`). |
 | `mimes` / `:mimes` | `array|string` | `config('media-selector.allowed_mimes', [])` | Restricts uploads to specific MIME types (supports wildcards like `image/*`). Overrides extension rules when provided. |
-| `ui` | `string` | `config('media-selector.ui', 'tailwind')` | Switches between the Tailwind and Bootstrap UI variants. |
+| `ui` | `string` | `config('media-selector.ui', 'tailwind')` | UI variant. Currently supports `tailwind`. |
 | `disk` | `string` | `config('media-selector.disk', 'public')` | Sets the filesystem disk used for uploads and URL generation. |
 | `directory` | `string` | `config('media-selector.directory', 'media')` | Base directory on the chosen disk where uploads are stored. |
 | `per-page` / `:per-page` | `int` | `config('media-selector.per_page', 24)` | Number of media items per page within the modal. |
 | `max-upload-kb` / `:max-upload-kb` | `int` | `config('media-selector.max_upload_kb', 5120)` | Maximum upload size in kilobytes. |
+| `show-thumbnails` / `:show-thumbnails` | `bool` | `config('media-selector.show_thumbnails', true)` | Shows or hides rendered image thumbnails in the selected preview area below Clear/Choose Media. When `false`, that preview area is not rendered; modal grids are unaffected. |
 | `require-width` / `:require-width` | `int|null` | `null` | Enforces an exact image width (in pixels) during upload validation. |
 | `require-height` / `:require-height` | `int|null` | `null` | Enforces an exact image height (in pixels). |
 | `require-aspect-ratio` / `:require-aspect-ratio` | `string|null` | `null` | Validates uploaded images against a specific aspect ratio (e.g. `"16:9"`). |
@@ -93,12 +94,12 @@ public function save(): void
 }
 ```
 
-### Bootstrap UI, video-only uploads
+### Tailwind UI, video-only uploads
 
 ```blade
 <livewire:media-selector
     wire:model="videos"
-    ui="bootstrap"
+    ui="tailwind"
     mimes='["video/*"]'
     :multiple="true"
 />
@@ -214,4 +215,3 @@ $galleryUrls = $product->getMediaUrls('gallery');
 
 - The component emits events such as `media-added`, `media-uploaded`, `media-deleted`, `media-restored`, and `media-selected`.  
 - Use the trait helpers on your models (`getMedia`, `getMediaUrls`, `getMediaUrl`, `attachMedia`, `syncMedia`) to work with the stored payloads.
-

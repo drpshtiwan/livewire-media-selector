@@ -149,8 +149,8 @@ return [
     | UI Framework
     |--------------------------------------------------------------------------
     |
-    | Choose which UI flavor to render for the modal: 'tailwind' or 'bootstrap'.
-    | You can override this per-component by passing :ui="'bootstrap'|'tailwind'".
+    | Choose which UI flavor to render for the modal.
+    | Currently only 'tailwind' is supported.
     |
     */
     'ui' => env('MEDIA_SELECTOR_UI', 'tailwind'),
@@ -168,4 +168,16 @@ return [
     'preview_mimes' => [
         'image/*',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Thumbnail Visibility
+    |--------------------------------------------------------------------------
+    |
+    | Control whether selected-value thumbnails are rendered in the preview
+    | area below the Clear/Choose Media buttons. This does not affect
+    | thumbnail rendering inside the modal grids.
+    |
+    */
+    'show_thumbnails' => env('MEDIA_SELECTOR_SHOW_THUMBNAILS', true),
 ];

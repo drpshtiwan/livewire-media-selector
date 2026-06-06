@@ -4,11 +4,11 @@ This guide walks you through installing the package, publishing assets, and rend
 
 ## Requirements
 
-- PHP >= 8.2 (PHP >= 8.3 required for Laravel 13)
-- Laravel 11, 12, or 13
+- PHP >= 8.3
+- Laravel 12 or 13
 - Livewire 3.5+ or 4.x
 
-For Laravel 10, use the `1.x` line of this package.
+Laravel 11 and earlier are not supported (Laravel 11 reached its security-fix end-of-life in March 2026). For older Laravel versions, use the `1.x` line of this package.
 
 ## Installation
 

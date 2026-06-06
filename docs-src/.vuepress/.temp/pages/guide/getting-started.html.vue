@@ -2,11 +2,11 @@
 <p>This guide walks you through installing the package, publishing assets, and rendering the Livewire media selector in your application.</p>
 <h2 id="requirements" tabindex="-1"><a class="header-anchor" href="#requirements"><span>Requirements</span></a></h2>
 <ul>
-<li>PHP &gt;= 8.2 (PHP &gt;= 8.3 required for Laravel 13)</li>
-<li>Laravel 11, 12, or 13</li>
+<li>PHP &gt;= 8.3</li>
+<li>Laravel 12 or 13</li>
 <li>Livewire 3.5+ or 4.x</li>
 </ul>
-<p>For Laravel 10, use the <code v-pre>1.x</code> line of this package.</p>
+<p>Laravel 11 and earlier are not supported (Laravel 11 reached its security-fix end-of-life in March 2026). For older Laravel versions, use the <code v-pre>1.x</code> line of this package.</p>
 <h2 id="installation" tabindex="-1"><a class="header-anchor" href="#installation"><span>Installation</span></a></h2>
 <div class="language-bash line-numbers-mode" data-highlighter="prismjs" data-ext="sh"><pre v-pre><code class="language-bash"><span class="line"><span class="token function">composer</span> require drpshtiwan/livewire-media-selector</span>
 <span class="line"></span></code></pre>

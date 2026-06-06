@@ -5,7 +5,7 @@ All notable changes to `drpshtiwan/livewire-media-selector` are documented in th
 ## [Unreleased]
 
 ### Added
-- Support for **Laravel 11, 12, and 13** (`illuminate/*` `^11.0|^12.0|^13.0`). Dropped Laravel 10.
+- Support for **Laravel 12 and 13** (`illuminate/*` `^12.0|^13.0`). Dropped Laravel 10 and 11 (Laravel 11 reached its security-fix EOL in March 2026).
 - Added a regression test asserting locked properties reject client-side mutation.
 
 ### Security
@@ -13,9 +13,9 @@ All notable changes to `drpshtiwan/livewire-media-selector` are documented in th
 - Removed `svg` from the default `allowed_extensions` and documented the stored-XSS risk of serving uploaded SVGs from a public disk.
 
 ### Compatibility
-- Minimum PHP raised to **8.2** (Laravel 13 requires PHP 8.3). Minimum Livewire raised to 3.5.
-- Dev dependencies updated: `orchestra/testbench` `^9|^10|^11`, `pestphp/pest` `^3|^4`.
-- CI matrix now runs PHP 8.2–8.4 across Laravel 11, 12, and 13.
+- Minimum PHP raised to **8.3**. Minimum Livewire raised to 3.5.
+- Dev dependencies updated: `orchestra/testbench` `^10|^11`, `pestphp/pest` `^3|^4`.
+- CI matrix now runs PHP 8.3–8.4 across Laravel 12 and 13.
 
 ## 3.0.0
 

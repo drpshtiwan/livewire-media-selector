@@ -14,13 +14,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Laravel 11 (illuminate ^11, testbench 9)
-          - php: '8.2'
-            laravel: '11.*'
-            testbench: '9.*'
-          - php: '8.3'
-            laravel: '11.*'
-            testbench: '9.*'
           # Laravel 12 (illuminate ^12, testbench 10)
           - php: '8.3'
             laravel: '12.*'
@@ -28,7 +21,7 @@ jobs:
           - php: '8.4'
             laravel: '12.*'
             testbench: '10.*'
-          # Laravel 13 (illuminate ^13, testbench 11, PHP >= 8.3)
+          # Laravel 13 (illuminate ^13, testbench 11)
           - php: '8.3'
             laravel: '13.*'
             testbench: '11.*'
@@ -59,7 +52,8 @@ jobs:
         run: |
           composer require --no-update --no-interaction \
             "illuminate/support:${{ matrix.laravel }}" \
-            "illuminate/database:${{ matrix.laravel }}" \
+            "illuminate/database:${{ matrix.laravel }}"
+          composer require --no-update --dev --no-interaction \
             "orchestra/testbench:${{ matrix.testbench }}"
           composer update --no-interaction --prefer-dist --prefer-stable
 

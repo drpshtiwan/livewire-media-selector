@@ -42,11 +42,11 @@ Full documentation: [livewire-media.thejano.com](http://livewire-media.thejano.c
 
 ### Requirements
 
-- PHP >= 8.2 (PHP >= 8.3 required for Laravel 13)
-- Laravel 11–13
+- PHP >= 8.3
+- Laravel 12–13
 - Livewire 3.5+ or 4.x
 
-Note: Livewire 3+ requires Laravel 11+. For Laravel 10 support, use the `1.x` line of this package.
+Note: Laravel 11 and earlier are not supported — Laravel 11 reached its security-fix end-of-life in March 2026. For older Laravel versions, use the `1.x` line of this package.
 
 Require the package:
 

@@ -12,9 +12,9 @@
     "library"
   ],
   "require": {
-    "php": "^8.2",
-    "illuminate/support": "^11.0|^12.0|^13.0",
-    "illuminate/database": "^11.0|^12.0|^13.0",
+    "php": "^8.3",
+    "illuminate/support": "^12.0|^13.0",
+    "illuminate/database": "^12.0|^13.0",
     "livewire/livewire": "^3.5|^4.0"
   },
   "autoload": {
@@ -28,7 +28,7 @@
     }
   },
   "require-dev": {
-    "orchestra/testbench": "^9.0|^10.0|^11.0",
+    "orchestra/testbench": "^10.0|^11.0",
     "pestphp/pest": "^3.0|^4.0",
     "pestphp/pest-plugin-laravel": "^3.0|^4.0",
     "laravel/pint": "^1.25.0"

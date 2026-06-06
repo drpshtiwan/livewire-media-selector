@@ -2,7 +2,7 @@
 
 All notable changes to `drpshtiwan/livewire-media-selector` are documented in this file.
 
-## [Unreleased]
+## 4.0.0
 
 ### Added
 - Support for **Laravel 12 and 13** (`illuminate/*` `^12.0|^13.0`). Dropped Laravel 10 and 11 (Laravel 11 reached its security-fix EOL in March 2026).

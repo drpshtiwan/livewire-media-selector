@@ -2,6 +2,7 @@
 
 namespace DrPshtiwan\LivewireMediaSelector;
 
+use DrPshtiwan\LivewireMediaSelector\Livewire\MediaSelector;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -19,7 +20,7 @@ class MediaSelectorServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'media-selector');
 
         if (class_exists(Livewire::class)) {
-            Livewire::component('media-selector', \DrPshtiwan\LivewireMediaSelector\Livewire\MediaSelector::class);
+            Livewire::component('media-selector', MediaSelector::class);
         }
 
         $this->publishes([

@@ -4,6 +4,7 @@ use DrPshtiwan\LivewireMediaSelector\Livewire\MediaSelector;
 use DrPshtiwan\LivewireMediaSelector\Models\Media;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use Livewire\Livewire;
 
 it('renders and can open modal and list media', function () {
@@ -173,6 +174,30 @@ it('does not delete media outside active scope', function () {
     expect(Media::query()->find($outOfScope->id))->not->toBeNull();
     expect(Media::query()->find($inScope->id))->toBeNull();
     expect(Media::withTrashed()->find($inScope->id))->not->toBeNull();
+});
+
+it('rejects client attempts to escalate permission and config properties', function () {
+    // Permission flags and storage/validation config are #[Locked]: a crafted
+    // Livewire request must not be able to mutate them from the browser.
+    $locked = [
+        'canDelete' => true,
+        'canUpload' => true,
+        'canSeeTrash' => true,
+        'canRestoreTrash' => true,
+        'restrictToCurrentUser' => false,
+        'allowedMimes' => [],
+        'allowedExtensions' => [],
+        'disk' => 'private',
+        'directory' => '../escape',
+        'maxUploadKb' => 999999,
+    ];
+
+    foreach ($locked as $property => $value) {
+        $component = Livewire::test(MediaSelector::class, ['canDelete' => false, 'canUpload' => false]);
+
+        expect(fn () => $component->set($property, $value))
+            ->toThrow(CannotUpdateLockedPropertyException::class);
+    }
 });
 
 it('accepts per component storage and pagination overrides', function () {

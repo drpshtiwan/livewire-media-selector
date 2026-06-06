@@ -5,7 +5,16 @@ This page summarizes recent package updates.
 ## Unreleased
 
 ### Added
+- Support for **Laravel 11, 12, and 13** (dropped Laravel 10).
 - `show_thumbnails` config option and `show-thumbnails` component attribute.
+
+### Security
+- Permission and storage/validation properties are now `#[Locked]` and resolved server-side only, so the browser can no longer flip permissions, bypass upload-type validation, or repoint storage.
+- `svg` removed from default `allowed_extensions` (stored-XSS risk when served from a public disk).
+
+### Compatibility
+- Minimum PHP raised to 8.2 (8.3 for Laravel 13); minimum Livewire raised to 3.5.
+- CI now tests PHP 8.2–8.4 across Laravel 11–13.
 
 ### Fixed
 - `show_thumbnails=false` disables image rendering only in selected previews below Clear/Choose Media; modal grids still render thumbnails.

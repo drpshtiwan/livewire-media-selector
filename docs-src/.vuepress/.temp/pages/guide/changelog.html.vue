@@ -3,7 +3,18 @@
 <h2 id="unreleased" tabindex="-1"><a class="header-anchor" href="#unreleased"><span>Unreleased</span></a></h2>
 <h3 id="added" tabindex="-1"><a class="header-anchor" href="#added"><span>Added</span></a></h3>
 <ul>
+<li>Support for <strong>Laravel 11, 12, and 13</strong> (dropped Laravel 10).</li>
 <li><code v-pre>show_thumbnails</code> config option and <code v-pre>show-thumbnails</code> component attribute.</li>
+</ul>
+<h3 id="security" tabindex="-1"><a class="header-anchor" href="#security"><span>Security</span></a></h3>
+<ul>
+<li>Permission and storage/validation properties are now <code v-pre>#[Locked]</code> and resolved server-side only, so the browser can no longer flip permissions, bypass upload-type validation, or repoint storage.</li>
+<li><code v-pre>svg</code> removed from default <code v-pre>allowed_extensions</code> (stored-XSS risk when served from a public disk).</li>
+</ul>
+<h3 id="compatibility" tabindex="-1"><a class="header-anchor" href="#compatibility"><span>Compatibility</span></a></h3>
+<ul>
+<li>Minimum PHP raised to 8.2 (8.3 for Laravel 13); minimum Livewire raised to 3.5.</li>
+<li>CI now tests PHP 8.2–8.4 across Laravel 11–13.</li>
 </ul>
 <h3 id="fixed" tabindex="-1"><a class="header-anchor" href="#fixed"><span>Fixed</span></a></h3>
 <ul>

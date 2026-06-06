@@ -2,6 +2,7 @@
 
 namespace DrPshtiwan\LivewireMediaSelector\Livewire\Concerns;
 
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +12,7 @@ trait HandlesSelection
     {
         $this->value = $path;
         $this->closeModal();
-        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        /** @var FilesystemAdapter $disk */
         $disk = Storage::disk($this->disk);
         $this->dispatch('media-selected', path: $path, url: $disk->url($path));
     }

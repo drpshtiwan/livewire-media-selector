@@ -4,6 +4,7 @@ use DrPshtiwan\LivewireMediaSelector\Concerns\HasMediaSelector;
 use DrPshtiwan\LivewireMediaSelector\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -111,7 +112,7 @@ it('can return media urls', function () {
     $allUrls = $model->getMediaUrls();
     $galleryUrls = $model->getMediaUrls('gallery');
 
-    /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+    /** @var FilesystemAdapter $disk */
     $disk = Storage::disk('public');
     $expectedA = $disk->url('media/a.jpg');
     $expectedB = $disk->url('media/b.jpg');
@@ -147,7 +148,7 @@ it('can return the first media url shortcut', function () {
     $firstUrl = $model->getMediaUrl('gallery');
     $allFirst = $model->getMediaUrl();
 
-    /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+    /** @var FilesystemAdapter $disk */
     $disk = Storage::disk('public');
     $expectedA = $disk->url('media/a.jpg');
 

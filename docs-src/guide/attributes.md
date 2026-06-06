@@ -34,6 +34,10 @@ Pass these attributes directly to the `<livewire:media-selector />` component to
 When using Blade/Livewire, kebab-case attribute names (e.g. `can-upload`) map to the camelCase properties on the component.
 :::
 
+::: warning Permission attributes are server-authoritative
+The permission and storage/validation attributes (`can-upload`, `can-delete`, `can-see-trash`, `can-restore-trash`, `restrict-to-current-user`, `mimes`, `extensions`, `disk`, `directory`, `per-page`, `max-upload-kb`, dimension constraints) back `#[Locked]` properties. They take effect at mount and **cannot be changed from the browser** — a crafted Livewire request cannot escalate permissions or loosen upload validation. Always derive the permission flags from your own authorization, e.g. `:can-delete="auth()->user()?->can('delete', $model)"`. See the [security model](./configuration.md#security-model) for details.
+:::
+
 ### Query helper
 
 The trait includes an Eloquent scope for eagerly loading media:

@@ -3,7 +3,9 @@
 namespace DrPshtiwan\LivewireMediaSelector\Concerns;
 
 use DrPshtiwan\LivewireMediaSelector\Models\Media;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -40,7 +42,7 @@ trait HasMediaSelector
     /**
      * Scope a query to eager load the media relationship, optionally filtered by collection.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  Builder  $query
      */
     public function scopeWithMediaCollection($query, ?string $collection = null, ?callable $callback = null)
     {
@@ -77,14 +79,14 @@ trait HasMediaSelector
                     : (string) config('media-selector.disk', config('filesystems.default', 'public'));
 
                 try {
-                    /** @var \Illuminate\Filesystem\FilesystemAdapter $adapter */
+                    /** @var FilesystemAdapter $adapter */
                     $adapter = Storage::disk($diskName);
 
                     return (string) $adapter->url($path);
                 } catch (\Throwable $e) {
                     try {
                         $defaultDisk = (string) config('filesystems.default', 'public');
-                        /** @var \Illuminate\Filesystem\FilesystemAdapter $adapter */
+                        /** @var FilesystemAdapter $adapter */
                         $adapter = Storage::disk($defaultDisk);
 
                         return (string) $adapter->url($path);

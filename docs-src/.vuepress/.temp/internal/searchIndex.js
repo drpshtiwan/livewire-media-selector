@@ -96,6 +96,20 @@ export const SEARCH_INDEX = [
           },
           {
             "level": 3,
+            "title": "Security",
+            "slug": "security",
+            "link": "#security",
+            "children": []
+          },
+          {
+            "level": 3,
+            "title": "Compatibility",
+            "slug": "compatibility",
+            "link": "#compatibility",
+            "children": []
+          },
+          {
+            "level": 3,
             "title": "Fixed",
             "slug": "fixed",
             "link": "#fixed",
@@ -155,6 +169,13 @@ export const SEARCH_INDEX = [
       },
       {
         "level": 2,
+        "title": "Security model",
+        "slug": "security-model",
+        "link": "#security-model",
+        "children": []
+      },
+      {
+        "level": 2,
         "title": "UI flavor",
         "slug": "ui-flavor",
         "link": "#ui-flavor",
@@ -175,6 +196,13 @@ export const SEARCH_INDEX = [
   {
     "title": "Getting Started",
     "headers": [
+      {
+        "level": 2,
+        "title": "Requirements",
+        "slug": "requirements",
+        "link": "#requirements",
+        "children": []
+      },
       {
         "level": 2,
         "title": "Installation",

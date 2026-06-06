@@ -2,6 +2,21 @@
 
 All notable changes to `drpshtiwan/livewire-media-selector` are documented in this file.
 
+## [Unreleased]
+
+### Added
+- Support for **Laravel 11, 12, and 13** (`illuminate/*` `^11.0|^12.0|^13.0`). Dropped Laravel 10.
+- Added a regression test asserting locked properties reject client-side mutation.
+
+### Security
+- **Locked all permission and storage/validation properties** (`canDelete`, `canUpload`, `canSeeTrash`, `canRestoreTrash`, `restrictToCurrentUser`, `mimes`/`extensions`, `allowedMimes`/`allowedExtensions`, `disk`, `directory`, `perPage`, `maxUploadKb`, dimension constraints, `collection`, `ui`, `accept`, `showThumbnails`) with Livewire's `#[Locked]` attribute. Previously these were ordinary public properties, so a crafted Livewire request could flip permissions, empty the allowed-type lists to bypass upload validation (e.g. upload an executable file), or repoint the storage disk/directory. They are now resolved server-side in `mount()` only.
+- Removed `svg` from the default `allowed_extensions` and documented the stored-XSS risk of serving uploaded SVGs from a public disk.
+
+### Compatibility
+- Minimum PHP raised to **8.2** (Laravel 13 requires PHP 8.3). Minimum Livewire raised to 3.5.
+- Dev dependencies updated: `orchestra/testbench` `^9|^10|^11`, `pestphp/pest` `^3|^4`.
+- CI matrix now runs PHP 8.2–8.4 across Laravel 11, 12, and 13.
+
 ## 3.0.0
 
 ### Added

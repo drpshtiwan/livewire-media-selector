@@ -5,6 +5,7 @@ namespace DrPshtiwan\LivewireMediaSelector\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 
@@ -44,7 +45,7 @@ class Media extends Model
 
     public function getUrlAttribute(): string
     {
-        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        /** @var FilesystemAdapter $disk */
         $disk = Storage::disk($this->disk);
 
         return $disk->url($this->path);

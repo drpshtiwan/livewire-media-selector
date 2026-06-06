@@ -166,6 +166,10 @@
 <p class="hint-container-title">Attribute casing</p>
 <p>When using Blade/Livewire, kebab-case attribute names (e.g. <code v-pre>can-upload</code>) map to the camelCase properties on the component.</p>
 </div>
+<div class="hint-container warning">
+<p class="hint-container-title">Permission attributes are server-authoritative</p>
+<p>The permission and storage/validation attributes (<code v-pre>can-upload</code>, <code v-pre>can-delete</code>, <code v-pre>can-see-trash</code>, <code v-pre>can-restore-trash</code>, <code v-pre>restrict-to-current-user</code>, <code v-pre>mimes</code>, <code v-pre>extensions</code>, <code v-pre>disk</code>, <code v-pre>directory</code>, <code v-pre>per-page</code>, <code v-pre>max-upload-kb</code>, dimension constraints) back <code v-pre>#[Locked]</code> properties. They take effect at mount and <strong>cannot be changed from the browser</strong> — a crafted Livewire request cannot escalate permissions or loosen upload validation. Always derive the permission flags from your own authorization, e.g. <code v-pre>:can-delete=&quot;auth()-&gt;user()?-&gt;can('delete', $model)&quot;</code>. See the <RouteLink to="/guide/configuration.html#security-model">security model</RouteLink> for details.</p>
+</div>
 <h3 id="query-helper" tabindex="-1"><a class="header-anchor" href="#query-helper"><span>Query helper</span></a></h3>
 <p>The trait includes an Eloquent scope for eagerly loading media:</p>
 <div class="language-php line-numbers-mode" data-highlighter="prismjs" data-ext="php"><pre v-pre><code class="language-php"><span class="line"><span class="token variable">$posts</span> <span class="token operator">=</span> <span class="token class-name static-context">Post</span><span class="token operator">::</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token punctuation">)</span></span>

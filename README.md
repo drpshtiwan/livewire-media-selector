@@ -42,11 +42,11 @@ Full documentation: [livewire-media.thejano.com](http://livewire-media.thejano.c
 
 ### Requirements
 
-- PHP >= 8.1
-- Laravel 10–12
-- Livewire 3.3+ or 4.x
+- PHP >= 8.2 (PHP >= 8.3 required for Laravel 13)
+- Laravel 11–13
+- Livewire 3.5+ or 4.x
 
-Note: Livewire 3+ requires Laravel 10+. If you need Laravel 9 support, a Livewire v2–compatible variant is required (not included in this package version).
+Note: Livewire 3+ requires Laravel 11+. For Laravel 10 support, use the `1.x` line of this package.
 
 Require the package:
 
@@ -92,6 +92,15 @@ Simple usage:
 ```
 
 [Read the docs](http://livewire-media.thejano.com/) for setup details, configuration options, and integration patterns.
+
+## Security
+
+The selector enforces a clear trust boundary between what the **server** controls and what the **browser** may change:
+
+- **Permission and config are server-only.** Flags such as `canDelete`, `canUpload`, `canSeeTrash`, `canRestoreTrash`, `restrictToCurrentUser`, the allowed file types (`mimes`/`extensions`), the storage `disk`/`directory`, and upload limits are `#[Locked]` Livewire properties. They are resolved once in `mount()` from the attributes you pass and from config; a crafted Livewire request **cannot** flip a permission, widen the allowed file types to smuggle an executable upload, or repoint the storage location.
+- **Derive permissions from your own authorization.** Pass the flags from policies/gates, e.g. `:can-delete="auth()->user()?->can('delete', $model)"`. The package will not grant an action you did not enable.
+- **Selections and deletions are re-validated server-side** against the active, scoped query — a user can never select, insert, or delete media outside the disk/collection/owner scope they are viewing.
+- **SVG uploads are disabled by default.** SVG files can embed `<script>`/event handlers, so serving them from a public disk by URL is a stored-XSS vector. They are omitted from the default `allowed_extensions`; if you re-enable them, sanitize uploads (e.g. `enshrined/svg-sanitize`) or serve them with `Content-Disposition: attachment` / a restrictive CSP. Note the `image/*` MIME wildcard also matches `image/svg+xml`.
 
 ## Changelog
 

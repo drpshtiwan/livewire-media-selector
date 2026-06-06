@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Modelable;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -45,53 +46,80 @@ class MediaSelector extends Component
 
     public string $activeTab = 'browse'; // browse|upload
 
+    // Security-sensitive configuration and permission flags below are marked
+    // #[Locked]. They are resolved server-side in mount() from component
+    // attributes and config, and must never be mutated from the browser.
+    // Without locking, a crafted Livewire request could flip permissions
+    // (e.g. canDelete/canUpload), widen the allowed file types to bypass
+    // upload validation, or repoint the storage disk/directory.
+    #[Locked]
     public string $disk;
 
+    #[Locked]
     public string $directory;
 
+    #[Locked]
     public int $perPage;
 
+    #[Locked]
     public int $maxUploadKb;
 
+    #[Locked]
     public array $allowedExtensions = [];
 
+    #[Locked]
     public array $allowedMimes = [];
 
+    #[Locked]
     public bool $multiple = false;
 
-    protected string $mediaClass = \DrPshtiwan\LivewireMediaSelector\Models\Media::class;
+    protected string $mediaClass = Media::class;
 
+    #[Locked]
     public bool $canDelete = false;
 
+    #[Locked]
     public bool $canUpload = true;
 
+    #[Locked]
     public bool $restrictToCurrentUser = false;
 
     // Optional image constraints for uploads
+    #[Locked]
     public ?int $requireWidth = null;
 
+    #[Locked]
     public ?int $requireHeight = null;
 
+    #[Locked]
     public ?string $requireAspectRatio = null; // e.g. "16:9"
 
+    #[Locked]
     public string $accept = '';
 
     protected bool $hasProvidedMimes = false;
 
     // Trash tab visibility and restore permission (attribute-driven)
+    #[Locked]
     public bool $canSeeTrash = false;
 
+    #[Locked]
     public bool $canRestoreTrash = false;
 
+    #[Locked]
     public string $ui = 'tailwind';
 
+    #[Locked]
     public bool $showThumbnails = true;
 
     // These receive attributes from the Blade tag: :mimes="[...]" :extensions="[...]"
+    #[Locked]
     public array|string $mimes = [];
 
+    #[Locked]
     public array|string $extensions = [];
 
+    #[Locked]
     public ?string $collection = null;
 
     public array $uploads = [];

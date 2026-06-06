@@ -1,5 +1,7 @@
 <?php
 
+use DrPshtiwan\LivewireMediaSelector\Models\Media;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +36,7 @@ return [
     */
     'table' => env('MEDIA_SELECTOR_TABLE', 'media_selector_media'),
     'mediables_table' => env('MEDIA_SELECTOR_MEDIABLES_TABLE', 'media_selector_mediables'),
-    'model' => \DrPshtiwan\LivewireMediaSelector\Models\Media::class,
+    'model' => Media::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -57,10 +59,16 @@ return [
     | If you instead pass explicit `mimes` to the component, those will take
     | precedence for validation and input `accept` filtering.
     |
+    | SECURITY: 'svg' is intentionally omitted from the defaults below. SVG
+    | files are XML and can embed <script>/onload handlers, so serving an
+    | uploaded SVG from a public disk by URL is a stored-XSS vector. Only
+    | re-enable SVG if you sanitize uploads (e.g. enshrined/svg-sanitize) or
+    | serve them with a Content-Disposition: attachment / restrictive CSP.
+    |
     */
     'allowed_extensions' => [
         // images
-        'jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'svg',
+        'jpg', 'jpeg', 'png', 'gif', 'webp', 'avif',
         // documents
         'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv',
         // video
@@ -78,6 +86,10 @@ return [
     | supported (e.g. image/*, video/*, audio/*). When explicit `mimes` are
     | provided to the component, they are used strictly for validation and
     | building the input `accept` attribute.
+    |
+    | SECURITY: the 'image/*' wildcard also matches 'image/svg+xml'. See the
+    | SVG note under 'allowed_extensions' above — sanitize SVGs or serve them
+    | as attachments before allowing them on a publicly served disk.
     |
     */
     'allowed_mimes' => [
